@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
-
 import Icons from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -59,7 +58,7 @@ const Hero = async () => {
             )}
           >
             <Balancer>
-              Starter Template for Initiating Your Next.js Projects
+            Turn YouTube Videos into Stunning Presentations in Seconds with AI
             </Balancer>
           </h1>
           <p
@@ -68,7 +67,7 @@ const Hero = async () => {
               'md:text-xl',
             )}
           >
-            <Balancer>Bootstrapped with useful development features.</Balancer>
+            <Balancer>SlideTube-AI transforms any YouTube video into a professional, editable presentation. Save time, increase productivity, and create captivating slides with just a link</Balancer>
           </p>
           <div
             className={cn(
@@ -81,7 +80,7 @@ const Hero = async () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Use This Template
+              Try It Now – Free Trial
             </Link>
             <Link
               href="https://github.com/bonabrian/nextjs-starter-tailwind"

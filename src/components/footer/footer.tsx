@@ -1,13 +1,13 @@
 import Link from 'next/link'
-
+import { FaGithub } from "react-icons/fa";
 import { cn } from '@/lib/utils'
 
 const Footer = () => {
   return (
-    <footer className={cn('relative z-10 w-full py-4', 'md:py-0')}>
+    <footer className={cn('relative z-10 w-full py-2', 'md:py-0')}>
       <div
         className={cn(
-          'container flex flex-col items-center justify-between gap-4',
+          'container flex flex-col items-center justify-between gap-2',
           'md:h-20',
           'md:flex-row',
         )}
@@ -42,6 +42,9 @@ const Footer = () => {
             See recent updates on GitHub
           </Link>
         </div>
+        <div className='space-x-4 text-center text-sm leading-loose text-muted-foreground'>
+        © 2024 SlideTube-AI. All rights reserved.
+        </div>
         <div
           className={cn(
             'space-x-4 text-center text-sm leading-loose text-muted-foreground',
@@ -49,13 +52,14 @@ const Footer = () => {
           )}
         >
           <Link
-            href="#"
+            href="https://github.com/engraya/slideTube-ai"
+            target='_blank'
             className={cn(
               'font-semibold',
               'hover:underline hover:underline-offset-4',
             )}
           >
-            About
+            <FaGithub size={"1.5rem"}/>
           </Link>
         </div>
       </div>

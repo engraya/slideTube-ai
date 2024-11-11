@@ -7,6 +7,10 @@ import Footer from '@/components/footer'
 import Header from '@/components/header'
 import { ThemeProvider } from '@/components/providers'
 import { cn } from '@/lib/utils'
+import {
+  ClerkProvider,
+} from '@clerk/nextjs'
+
 
 const fontSans = PlusJakartaSans({
   subsets: ['latin'],
@@ -21,6 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+  <ClerkProvider>
     <html lang="en" suppressHydrationWarning className={fontSans.variable}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -30,11 +35,12 @@ export default function RootLayout({
             )}
           />
           <Header />
-          <main className={cn('relative z-10')}>{children}</main>
+          <main className={cn('relative z-10 min-h-screen')}>{children}</main>
           <Footer />
           <Analytics />
         </ThemeProvider>
       </body>
     </html>
+   </ClerkProvider>
   )
 }

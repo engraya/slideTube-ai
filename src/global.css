@@ -88,3 +88,10 @@
     @apply antialiased bg-background text-foreground;
   }
 }
+
+
+
+  /* ======================== Auth Pages */
+  .auth-page {
+    @apply flex min-h-screen w-full flex-col items-center justify-center gap-10;
+  }

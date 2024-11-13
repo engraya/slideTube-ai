@@ -29,7 +29,7 @@ function Benefits() {
             </path>
           </svg>
         </div>
-        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-blue-500 rounded-full" />
+        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900 rounded-full" />
       </div>
       <h3 className="font-headline text-xl sm:text-2xl mt-6 sm:mt-10">Save Time</h3>
       <p className="leading-relaxed mt-4">Automatically generate presentations from YouTube videos without spending hours on manual slide creation.</p>
@@ -41,7 +41,7 @@ function Benefits() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
           </svg>
         </div>
-        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-blue-500 rounded-full" />
+        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900 rounded-full" />
       </div>
       <h3 className="font-headline text-xl sm:text-2xl mt-6 sm:mt-10">Increase Productivity</h3>
       <p className="leading-relaxed mt-4">Focus on the content and insights, not on formatting. Let AI handle the structure.</p>
@@ -54,7 +54,7 @@ function Benefits() {
             </path>
           </svg>
         </div>
-        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-blue-500 rounded-full" />
+        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900 rounded-full" />
       </div>
       <h3 className="font-headline text-xl sm:text-2xl mt-6 sm:mt-10">Create Stunning Presentations</h3>
       <p className="leading-relaxed mt-4">No design experience required – SlideTube-AI makes it easy to create beautiful, professional presentations every time.</p>
@@ -66,7 +66,7 @@ function Benefits() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
           </svg>
         </div>
-        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-blue-500 rounded-full" />
+        <div className="absolute inset-0 -translate-x-2 -translate-y-2 bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900 rounded-full" />
       </div>
       <h3 className="font-headline text-xl sm:text-2xl mt-6 sm:mt-10">Perfect for Everyone</h3>
       <p className="leading-relaxed mt-4">Whether you're preparing lessons, client pitches, or marketing presentations, SlideTube-AI helps you in many ways</p>

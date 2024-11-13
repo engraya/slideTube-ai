@@ -31,10 +31,10 @@ const OpenSource = () => {
           )}
         >
           <Balancer>
-            snxtw is open source and powered by open source software. The code
+            SlideTube-AI is open source and powered by open source software. The code
             is available on{' '}
             <Link
-              href="https://github.com/bonabrian/snxtw"
+              href="https://github.com/engraya/slideTube-ai"
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-4"

@@ -5,12 +5,7 @@ import { useOnScroll } from '@/hooks'
 import { cn } from '@/lib/utils'
 import ThemeSwitch from '../theme-switch'
 import { useState } from 'react'
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
+import {SignInButton, SignedIn,SignedOut, UserButton } from '@clerk/nextjs'
 const Header = () => {
   // State to track if the mobile menu is open
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +30,9 @@ const Header = () => {
         <div className={cn('flex h-full items-center justify-between')}>
           {/* Logo */}
           <Link href="/" className={cn('text-2xl font-bold')}>
-            SlideTube-AI
+          <h1 className='bg-gradient-to-br from-gray-700 via-gray-200 to-gray-600 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent drop-shadow-sm'>
+          SlideTube-AI
+          </h1>
           </Link>
 
           {/* Desktop Menu */}

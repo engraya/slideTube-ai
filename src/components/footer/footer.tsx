@@ -26,11 +26,11 @@ const Footer = () => {
               rel="noreferrer"
               className={cn('font-medium underline underline-offset-4')}
             >
-              ENGRAYA
+              engrahmad
             </Link>
           </p>
           <Link
-            href="https://github.com/bonabrian/snxtw"
+           href="https://github.com/engraya/slideTube-ai"
             target="_blank"
             rel="noreferrer"
             className={cn(

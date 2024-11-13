@@ -5,17 +5,18 @@ import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const stack = [
+
+  {
+    title: 'Next.js',
+    link: 'https://nextjs.org/',
+    icon: Icons.nextJs,
+    className: 'hover:text-[#3178C6]',
+  },
   {
     title: 'TypeScript',
     link: 'https://www.typescriptlang.org/',
     icon: Icons.typeScript,
     className: 'hover:text-[#3178C6]',
-  },
-  {
-    title: 'Next.js',
-    link: 'https://nextjs.org/',
-    icon: Icons.nextJs,
-    className: 'hover:text-foreground',
   },
   {
     title: 'Tailwind CSS',
@@ -27,7 +28,7 @@ const stack = [
     title: 'Vercel',
     link: 'https://vercel.com/',
     icon: Icons.vercel,
-    className: 'hover:text-foreground',
+    className: 'hover:text-[#3178C6]',
   },
 ]
 

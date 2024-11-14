@@ -12,13 +12,13 @@ function CTASections() {
       'lg:py-24',
     )}
   >
-      <div className="text-white py-20">
+      <div className="dark:text-white text-gray-800 py-20">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex flex-col gap-8 lg:flex-row items-center">
       <div className="lg:w-1/2">
         <h1 className="text-4xl font-bold leading-tight mb-4">Ready to Create Stunning Presentations?</h1>
         <p className="text-xl mb-8">Transform your YouTube videos into impactful presentations today with SlideTube-AI.</p>
-        <Link href="#"
+        <Link href="/generate"
          className={cn(buttonVariants({ variant: 'outline' }), 'gap-x-2 py-3 px-6 rounded-lg')}
          >
             Get

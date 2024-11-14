@@ -40,6 +40,11 @@ const Header = () => {
             <ul className="flex justify-center space-x-4 hover:text-sky-300">
               <li><Link href="/" className="hover:text-secondary font-bold">Home</Link></li>
               <li><Link href="/about" className="hover:text-secondary font-bold">About</Link></li>
+              <SignedIn>
+              <li><Link href="/dashboard" className="hover:text-secondary font-bold">Dashboard</Link></li>
+              <li><Link href="/generate" className="hover:text-secondary font-bold">Generate</Link></li>
+              </SignedIn>
+        
             </ul>
           </nav>
 
@@ -93,6 +98,14 @@ const Header = () => {
               <li>
                 <Link href="/about" className="hover:text-sky-300 cursor-pointer font-bold" onClick={() => setIsMenuOpen(false)}>About</Link>
               </li>
+              <SignedIn>
+              <li>
+                <Link href="/dashboard" className="hover:text-sky-300 cursor-pointer font-bold" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+              </li>
+              <li>
+                <Link href="/generate" className="hover:text-sky-300 cursor-pointer font-bold" onClick={() => setIsMenuOpen(false)}>Generate</Link>
+              </li>
+              </SignedIn>
             </ul>
             <SignedOut>
                     <button  className="relative inline-flex items-center justify-center mx-auto py-2 pl-4 pr-12 overflow-hidden font-semibold transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gradient-to-r from-green-400 to-blue-500 text-white group">

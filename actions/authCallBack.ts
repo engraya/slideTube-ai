@@ -1,7 +1,6 @@
 "use server"
 
-import { currentUser } from "@clerk/nextjs/dist/types/server";
-
+import { currentUser } from '@clerk/nextjs/server'
 import { db } from "../db";
 
 export async function CreateUserIfNull() {

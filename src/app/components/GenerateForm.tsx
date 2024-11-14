@@ -2,12 +2,12 @@
 
 import { Loader2, VideoIcon } from "lucide-react";
 import { useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import MaxWidthWrapper from "./common/MaxWidthWrapper";
-import { Card } from "./ui/card";
-import { CreatePowerpoint } from "@/app/generate/actions";
-import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import MaxWidthWrapper from "@/components/common/MaxWidthWrapper";
+import { Card } from "@/components/ui/card";
+import { CreatePowerpoint } from "../../../actions/generatePowerPoint";
+import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 export default function GenerateForm() {
@@ -95,12 +95,12 @@ export default function GenerateForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-violet-100 py-12">
+    <div className="min-h-screen py-12">
       <MaxWidthWrapper>
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
+          <h1 className="text-4xl bg-gradient-to-br from-gray-700 via-gray-200 to-gray-600 bg-clip-text text-center font-bold tracking-tight text-transparent drop-shadow-sm mb-8">
             Create beautiful presentations{" "}
-            <span className="block text-lg font-normal text-gray-600 mt-2">
+            <span className="block text-lg font-normal text-gray-500 mt-2">
               Transform any YouTube video into a professional PowerPoint
             </span>
           </h1>

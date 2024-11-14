@@ -6,6 +6,7 @@ import Benefits from './components/beneftits'
 import FrequentlyAskQuestions from './components/faq'
 import Testmonials from './components/testmonials'
 import Banner from './components/banner'
+import Pricing from './components/pricing'
 export default function Home() {
   return (
     <>
@@ -14,6 +15,7 @@ export default function Home() {
       <Benefits />
       <Testmonials/>
       <Banner/>
+      <Pricing/>
       <FrequentlyAskQuestions/>
       <CTASections/>
       <OpenSource />

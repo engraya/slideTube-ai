@@ -20,14 +20,12 @@ const Footer = () => {
             )}
           >
             Developed by{' '}
-            <Link
-              href={"#"}
-              target="_blank"
+            <div
               rel="noreferrer"
               className={cn('font-medium underline underline-offset-4')}
             >
               engrahmad
-            </Link>
+            </div>
           </p>
           <Link
            href="https://github.com/engraya/slideTube-ai"

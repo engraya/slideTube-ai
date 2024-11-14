@@ -1,6 +1,6 @@
 "use server";
 import { db } from "../db";
-import { currentUser } from "@clerk/nextjs/dist/types/server";
+import { currentUser } from '@clerk/nextjs/server'
 import axios from "axios";
 import { DOMParser } from "xmldom";
 import { z } from "zod";

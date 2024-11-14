@@ -33,15 +33,6 @@ const stack = [
 ]
 
 const Hero = async () => {
-  const { stargazers_count: stars } = await fetch(
-    'https://api.github.com/repos/bonabrian/nextjs-starter-tailwind',
-    {
-      next: { revalidate: 60 },
-    },
-  )
-    .then((res) => res.json())
-    .catch((e) => console.error(e))
-
   return (
     <div className={cn('container')}>
       <div
@@ -76,7 +67,7 @@ const Hero = async () => {
             )}
           >
             <Link
-              href="https://github.com/new?template_name=nextjs-starter-tailwind&template_owner=bonabrian"
+              href="/generate"
               className={cn(buttonVariants(), 'gap-x-2')}
               target="_blank"
               rel="noopener noreferrer"
@@ -84,12 +75,11 @@ const Hero = async () => {
               Try It Now – Free Trial
             </Link>
             <Link
-              href="https://github.com/bonabrian/nextjs-starter-tailwind"
+              href="https://github.com/engraya/slideTube-ai"
               className={cn(buttonVariants({ variant: 'outline' }), 'gap-x-2')}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span className={cn('font-medium')}>{stars}</span>
               <Icons.star className={cn('h-4 w-4')} />
               <span>on</span>
               <Icons.gitHub className={cn('h-4 w-4')} />
@@ -98,7 +88,7 @@ const Hero = async () => {
         </div>
         <div className={cn('flex flex-col')}>
           <h2 className="mb-4 text-center text-2xl font-semibold tracking-tight">
-            Tech Stack
+            Built with
           </h2>
           <div
             className={cn('flex flex-wrap items-center justify-center gap-6')}

@@ -82,7 +82,7 @@ export default function GenerateForm() {
           variant: "destructive",
         });
       }
-
+      console.log("Result", result);
       router.push(`/dashboard`);
     } catch (error) {
       console.error(error);

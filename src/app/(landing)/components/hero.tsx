@@ -69,7 +69,6 @@ const Hero = async () => {
             <Link
               href="/generate"
               className={cn(buttonVariants(), 'gap-x-2')}
-              target="_blank"
               rel="noopener noreferrer"
             >
               Try It Now – Free Trial

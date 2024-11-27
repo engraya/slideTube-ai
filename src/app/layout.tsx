@@ -18,7 +18,6 @@ const fontSans = PlusJakartaSans({
   weight: ['400', '500', '600', '700', '800'],
 })
 
-
 export default function RootLayout({
   children,
 }: {

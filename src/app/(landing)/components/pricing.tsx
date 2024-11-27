@@ -30,7 +30,7 @@ function Pricing() {
         </div>
         <p className="mt-4 text-sm leading-6 text-gray-500">Ideal for individuals or casual users looking to explore the power of SlideTube-AI.</p>
         <p className="mt-6 flex items-baseline gap-x-1">
-          <span className="text-4xl font-bold tracking-tight dark:text-white text-gray-800">$ 10 / month</span><span className="text-sm font-semibold leading-6 text-gray-300" />
+          <span className="text-4xl font-bold tracking-tight dark:text-white text-gray-800">$ 0 / month</span><span className="text-sm font-semibold leading-6 text-gray-300" />
         </p>
         <Link href="/generate" aria-describedby="product1" className="bg-gray-700 text-white hover:bg-emerald-400 focus-visible:outline-white mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Get started</Link>
         <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-200 xl:mt-10">

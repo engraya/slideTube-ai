@@ -1,4 +1,7 @@
 "use server";
+
+
+
 import { db } from "../db";
 import { currentUser } from '@clerk/nextjs/server'
 import axios from "axios";
@@ -13,16 +16,14 @@ import type { UploadFileResult } from "uploadthing/types";
 import { UTApi } from "uploadthing/server";
 import fs from "fs";
 
-const CURRENT_MODEL = "gpt-4o-mini";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 const DEFAULT_SLIDE_COUNT = 10;
 
 const utapi = new UTApi({
   token: process.env.UPLOADTHING_TOKEN!,
 });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPEN_API_KEY,
-});
 
 type SlideContent = {
   title: string;
@@ -59,22 +60,22 @@ export async function CreatePowerpoint(videoId: string) {
     
     const user = await currentUser();
   
-    if (!user || !user.id) {
-      return {
-        success: false,
-      };
-    }
-    const dbUser = await db.user.findFirst({
-      where: {
-        id: user.id,
-      },
-    });
+    // if (!user || !user.id) {
+    //   return {
+    //     success: false,
+    //   };
+    // }
+    // const dbUser = await db.user.findFirst({
+    //   where: {
+    //     id: user.id,
+    //   },
+    // });
 
-    if (!dbUser) {
-      return {
-        success: false,
-      };
-    }
+    // if (!dbUser) {
+    //   return {
+    //     success: false,
+    //   };
+    // }
 
     const { length, subtitlesURL } = await GetVideoLengthAndSubtitles(videoId);
     console.log(length, subtitlesURL);
@@ -93,42 +94,22 @@ export async function CreatePowerpoint(videoId: string) {
     }
 
     const fullText = parsedSubtitles?.map((item) => item.text).join(" ");
+    console.log("Full Video Text", fullText);
+ 
+
+    const textDescription = await CreateTitleAndDescription(fullText);
+
+    console.log("Text Description", textDescription);
 
     const [titleAndDescription, slideObjects] = await Promise.all([
       CreateTitleAndDescription(fullText),
       ConvertToObjects(fullText),
     ]);
 
-    if (!slideObjects) {
-      throw new Error("Failed to convert to objects");
-    }
+    console.log("Title and Description", titleAndDescription);
+    console.log("slideObjects", slideObjects)
+ 
 
-    const { fileName, filePath } = await CreatePowerpointFromArrayOfObjects(
-      titleAndDescription,
-      slideObjects,
-      user.id
-    );
-
-    const fileBuffer = await fs.promises.readFile(filePath);
-    const UploadResult = await UploadPowerpointToUploadThing(
-      fileBuffer,
-      fileName
-    );
-
-    if (!UploadResult[0].data?.url) {
-      throw new Error("Upload failed - No URL returned");
-    }
-
-    await db.generatedPowerpoints.create({
-      data: {
-        link: UploadResult[0].data?.url,
-        ownerId: user.id,
-        title: titleAndDescription.title,
-        description: titleAndDescription.description,
-      },
-    });
-
-    await fs.promises.unlink(filePath);
 
     return {
       success: true,
@@ -187,48 +168,53 @@ export async function parseXMLContent(
   }
 }
 
+
+
+
 export async function CreateTitleAndDescription(
   transcript: string
 ): Promise<TitleDescription> {
-  const promptTemplate = `Generate a title and description for this Powerpoint presentation based on the following transcript. 
+  const promptTemplate = `Generate a title and description for this PowerPoint presentation based on the following transcript.
     Requirements: 
-    - Title should be fewer than 20 words 
-    - description should be fewer than 35 words 
-    - Focus on content rather than speaker 
-    - make sure the output is in English 
-
+    - Title should be fewer than 10 words 
+    - Split all the transacript into descriptions, should be 4 lines each 
+    - Focus on content rather than speaker
+    - Split the title and description in an object
+    - Make sure the output is in English 
+    - Take the transcript and split it into an array of descriptions with 3 lines each giving me array fo descriptions
+    
     Transcript: ${transcript}
     `;
 
   try {
-    const completion = await openai.beta.chat.completions.parse({
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful assistant designed to generate titles and descriptions",
-        },
-        {
-          role: "user",
-          content: promptTemplate,
-        },
-      ],
-      model: CURRENT_MODEL,
-      response_format: zodResponseFormat(TitleAndDescriptionSchema, "title"),
-    });
+    // Initialize Gemini API client
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const result = completion.choices[0].message.parsed;
+    const response = await model.generateContent(promptTemplate);
+    console.log("Response from Api",response);
+    console.log("Response from Api",response.response?.text());
+    console.log("Candidates",response.response.candidates[0].content.parts);
 
-    if (!result) {
+    if (!response || !response.response) {
       throw new Error("Failed to generate title and description");
     }
 
-    return result;
+    // Assuming the response contains a single choice with `text`
+    const output = response.response.candidates[0].content.parts;
+ 
+
+    if (!output) {
+      throw new Error("Invalid response format from Gemini API");
+    }
+
+    return output;
   } catch (error) {
-    console.error(error);
+    console.error("Error while generating title and description:", error);
     throw new Error("Failed to generate title and description");
   }
 }
+
 
 export async function ConvertToObjects(
   text: string,
@@ -236,30 +222,19 @@ export async function ConvertToObjects(
 ): Promise<SlideContent[] | null> {
   const promptTemplate = `Condense and tidy up the following text to make it suitable for a Powerpoint presentation. Transform it 
         into an array of objects. I have provided the schema for the output. Make sure that the content array has between 3 and 4 items, 
-        and each content string should be between 160 and 170 characters. You can add to the content based on the transcript.. 
+        and each content string should be between 50 and 170 characters. You can add to the content based on the transcript.. 
         The length of the array should be ${slideCount}.
         The text to process is as follows: ${text}
     `;
 
   try {
-    const completion = await openai.beta.chat.completions.parse({
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful assistant designed to convert text into objects. You output JSON based on a schema I provide.",
-        },
-        {
-          role: "user",
-          content: promptTemplate,
-        },
-      ],
-      model: CURRENT_MODEL,
-      response_format: zodResponseFormat(
-        arrayOfObjectsSchema,
-        "arrayOfObjects"
-      ),
-    });
+    // Initialize Gemini API client
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const completion = await model.generateContent(promptTemplate);
+    console.log("Object Completion",completion);
+
 
     const result = completion.choices[0].message.parsed;
 
@@ -274,102 +249,3 @@ export async function ConvertToObjects(
   }
 }
 
-export async function CreatePowerpointFromArrayOfObjects(
-  titleAndDescription: TitleDescription,
-  slides: SlideContent[],
-  userId: string
-) {
-  const pptx = new pptxgen();
-
-  const titleSlide = pptx.addSlide();
-  titleSlide.background = { color: "#FFFFFF" };
-
-  titleSlide.addText(titleAndDescription.title, {
-    x: 0,
-    y: "40%",
-    w: "100%",
-    h: 1,
-    fontSize: 33,
-    bold: true,
-    color: "003366",
-    align: "center",
-    fontFace: "Helvetica",
-  });
-
-  titleSlide.addText(titleAndDescription.description, {
-    x: 0,
-    y: "58%",
-    w: "100%",
-    h: 0.75,
-    fontSize: 18,
-    color: "888888",
-    align: "center",
-    fontFace: "Helvetica",
-  });
-
-  slides.forEach(({ title, content }) => {
-    const slide = pptx.addSlide();
-    slide.addText(title, {
-      x: 0.5,
-      y: 0.5,
-      w: 8.5,
-      h: 1,
-      fontSize: 32,
-      bold: true,
-      color: "003366",
-      align: "center",
-      fontFace: "Arial",
-    });
-
-    content.forEach((bullet, index) => {
-      slide.addText(bullet, {
-        x: 1,
-        y: 1.8 + index * 1,
-        w: 8,
-        h: 0.75,
-        fontSize: 15,
-        color: "333333",
-        align: "left",
-        fontFace: "Arial",
-        bullet: true,
-      });
-    });
-  });
-
-  try {
-    const fileName = `presentation-${randomUUID()}-userId=${userId}.pptx`;
-    const filePath = path.join("/tmp", fileName);
-
-    await pptx.writeFile({ fileName: filePath });
-
-    return {
-      fileName,
-      filePath,
-    };
-  } catch (error) {
-    console.error(error);
-    throw new Error("Failed to create powerpoint");
-  }
-}
-
-export async function UploadPowerpointToUploadThing(
-  fileBuffer: Buffer,
-  fileName: string
-): Promise<UploadFileResult[]> {
-  try {
-    const file = new File([fileBuffer], fileName, {
-      type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    });
-
-    const response = await utapi.uploadFiles([file]);
-
-    if (!response?.[0].data?.url) {
-      throw new Error("Upload failed - No URL returned");
-    }
-
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Failed to upload powerpoint to uploadthing");
-  }
-}

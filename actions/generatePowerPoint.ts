@@ -5,6 +5,7 @@
 import { db } from "../db";
 import { currentUser } from '@clerk/nextjs/server'
 import axios from "axios";
+import os from "os";
 import { DOMParser } from "xmldom";
 import { z } from "zod";
 import OpenAI from "openai";
@@ -60,11 +61,11 @@ export async function CreatePowerpoint(videoId: string) {
     
     const user = await currentUser();
   
-    // if (!user || !user.id) {
-    //   return {
-    //     success: false,
-    //   };
-    // }
+    if (!user || !user.id) {
+      return {
+        success: false,
+      };
+    }
     // const dbUser = await db.user.findFirst({
     //   where: {
     //     id: user.id,
@@ -95,19 +96,26 @@ export async function CreatePowerpoint(videoId: string) {
 
     const fullText = parsedSubtitles?.map((item) => item.text).join(" ");
     console.log("Full Video Text", fullText);
- 
 
-    const textDescription = await CreateTitleAndDescription(fullText);
-
-    console.log("Text Description", textDescription);
 
     const [titleAndDescription, slideObjects] = await Promise.all([
       CreateTitleAndDescription(fullText),
       ConvertToObjects(fullText),
     ]);
 
-    console.log("Title and Description", titleAndDescription);
-    console.log("slideObjects", slideObjects)
+    // console.log("Title and Description", titleAndDescription);
+    // console.log("slideObjects", slideObjects)
+
+    
+    if (!slideObjects) {
+      throw new Error("Failed to convert to objects");
+    }
+
+    const { fileName, filePath } = await CreatePowerpointFromArrayOfObjects(
+      titleAndDescription,
+      slideObjects,
+      user?.id
+    );
  
 
 
@@ -192,9 +200,28 @@ export async function CreateTitleAndDescription(
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const response = await model.generateContent(promptTemplate);
-    console.log("Response from Api",response);
     console.log("Response from Api",response.response?.text());
-    console.log("Candidates",response.response.candidates[0].content.parts);
+
+    const rawResponse = response.response?.text();
+
+        // Use a regex to extract the JSON block between ```json and ```
+    const match = rawResponse.match(/```json\s*([\s\S]*?)\s*```/);
+
+    if (!match || match.length < 2) {
+      throw new Error("Failed to extract JSON block from response");
+    }
+
+    const jsonString = match[1].trim(); // Extract the JSON string
+    const parsedObject = JSON.parse(jsonString); // Parse it into a JavaScript object
+
+    console.log("Parsed Object:", parsedObject);
+
+    // Use the parsed object
+    const { title, description } = parsedObject;
+    console.log("Title:", title);
+    console.log("Descriptions:", description);
+
+
 
     if (!response || !response.response) {
       throw new Error("Failed to generate title and description");
@@ -233,19 +260,152 @@ export async function ConvertToObjects(
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const completion = await model.generateContent(promptTemplate);
-    console.log("Object Completion",completion);
 
 
-    const result = completion.choices[0].message.parsed;
-
-    if (!result) {
-      throw new Error("Failed to convert to objects");
+    const rawResult = completion.response.text();
+    console.log("Raw Result:", rawResult);
+  
+    if (!rawResult) {
+      throw new Error("Failed to retrieve response");
     }
-
-    return result.arrayOfObjects;
+  
+    // Attempt to extract JSON block using an updated regex for multiple marker types
+    const match = rawResult.match(/```(?:json|javascript)\s*([\s\S]*?)\s*```/i);
+  
+    let jsonString;
+    if (match && match.length >= 2) {
+      jsonString = match[1].trim();
+    } else if (rawResult.trim().startsWith("{") || rawResult.trim().startsWith("[")) {
+      // If no markers, but valid JSON structure exists, use it directly
+      jsonString = rawResult.trim();
+    } else {
+      console.error("Failed to extract JSON block. Raw response:", rawResult);
+      throw new Error("Failed to extract JSON block from response");
+    }
+  
+    console.log("Extracted JSON String:", jsonString);
+  
+    // Parse the JSON string into a JavaScript object
+    const parsedObject = JSON.parse(jsonString);
+  
+    if (!Array.isArray(parsedObject)) {
+      throw new Error("Invalid JSON format: Expected an array of objects");
+    }
+  
+    console.log("Parsed Object:", parsedObject);
+  
+    return parsedObject; // Return the array of objects
   } catch (error) {
     console.error(error);
     throw new Error("Failed to convert to objects");
   }
 }
 
+export async function CreatePowerpointFromArrayOfObjects(
+  titleAndDescription: TitleDescription,
+  slides: SlideContent[],
+  userId: string
+) {
+  const pptx = new pptxgen();
+
+  const titleSlide = pptx.addSlide();
+  titleSlide.background = { color: "#FFFFFF" };
+
+  titleSlide.addText(titleAndDescription.title, {
+    x: 0,
+    y: "40%",
+    w: "100%",
+    h: 1,
+    fontSize: 33,
+    bold: true,
+    color: "003366",
+    align: "center",
+    fontFace: "Helvetica",
+  });
+
+  titleSlide.addText(titleAndDescription.description, {
+    x: 0,
+    y: "58%",
+    w: "100%",
+    h: 0.75,
+    fontSize: 18,
+    color: "888888",
+    align: "center",
+    fontFace: "Helvetica",
+  });
+
+  slides?.forEach(({ title, content }: SlideContent) => {
+    const slide = pptx.addSlide();
+  
+    // Add slide title
+    slide.addText(title, {
+      x: 0.5,
+      y: 0.5,
+      w: 8.5,
+      h: 1,
+      fontSize: 32,
+      bold: true,
+      color: "003366",
+      align: "center",
+      fontFace: "Arial",
+    });
+  
+    let bulletPoints: string[] = [];
+  
+    // Handle content as either string or array
+    if (typeof content === "string") {
+      bulletPoints = content.split(". ").map((sentence) => sentence.trim());
+    } else if (Array.isArray(content)) {
+      bulletPoints = content.map((sentence) => sentence.trim());
+    }
+  
+    // Log a warning if content is neither a string nor an array
+    if (!bulletPoints.length) {
+      console.warn(`Content for slide "${title}" is not a string or an array. Skipping.`);
+      return;
+    }
+  
+    // Add bullet points to the slide
+    bulletPoints.forEach((bullet: string, index: number) => {
+      slide.addText(bullet, {
+        x: 1,
+        y: 1.8 + index * 0.5, // Adjust vertical position per bullet
+        w: 8,
+        h: 0.5,
+        fontSize: 15,
+        color: "333333",
+        align: "left",
+        fontFace: "Arial",
+        bullet: true,
+      });
+    });
+  });
+  
+  
+  
+
+  try {
+   // Resolve the user's downloads directory
+   const downloadsDir = path.join(os.homedir(), "Downloads");
+
+   // Ensure the directory exists
+   if (!fs.existsSync(downloadsDir)) {
+     fs.mkdirSync(downloadsDir, { recursive: true });
+   }
+ 
+   // Generate the file name and path
+   const fileName = `presentation-${randomUUID()}-userId=${userId}.pptx`;
+   const filePath = path.join(downloadsDir, fileName);
+ 
+   // Write the PowerPoint file
+   await pptx.writeFile({ fileName: filePath });
+ 
+   return {
+     fileName,
+     filePath,
+   };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to create powerpoint");
+  }
+}

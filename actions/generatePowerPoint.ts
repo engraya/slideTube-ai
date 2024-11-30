@@ -250,60 +250,84 @@ export async function ConvertToObjects(
   text: string,
   slideCount = DEFAULT_SLIDE_COUNT,
 ): Promise<SlideContent[] | null> {
-  const promptTemplate = `Condense and tidy up the following text to make it suitable for a Powerpoint presentation. Transform it 
+  const promptTemplate = `Condense and tidy up the following text to make it suitable for a PowerPoint presentation. Transform it 
         into an array of objects. I have provided the schema for the output. Make sure that the content array has between 3 and 4 items, 
-        and each content string should be between 50 and 170 characters. You can add to the content based on the transcript.. 
+        and each content string should be between 50 and 170 characters. You can add to the content based on the transcript. 
         The length of the array should be ${slideCount}.
         The text to process is as follows: ${text}
-    `
+    `;
 
   try {
     // Initialize Gemini API client
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const completion = await model.generateContent(promptTemplate)
+    const completion = await model.generateContent(promptTemplate);
 
-    const rawResult = completion.response.text()
+    const rawResult = completion.response.text();
 
     if (!rawResult) {
-      throw new Error('Failed to retrieve response')
+      throw new Error('No response received from the AI model.');
     }
 
-    // Attempt to extract JSON block using an updated regex for multiple marker types
-    const match = rawResult.match(/```(?:json|javascript)\s*([\s\S]*?)\s*```/i)
+    // Log raw response for debugging
+    console.log('Raw AI Response:', rawResult);
 
-    let jsonString
+    // Attempt to extract JSON block using a regex
+    const match = rawResult.match(/```(?:json|javascript)\s*([\s\S]*?)\s*```/i);
+
+    let jsonString;
     if (match && match.length >= 2) {
-      jsonString = match[1].trim()
+      jsonString = match[1].trim();
     } else if (
       rawResult.trim().startsWith('{') ||
       rawResult.trim().startsWith('[')
     ) {
-      // If no markers, but valid JSON structure exists, use it directly
-      jsonString = rawResult.trim()
+      // Handle cases where JSON is directly provided without markers
+      jsonString = rawResult.trim();
     } else {
-      console.error('Failed to extract JSON block. Raw response:', rawResult)
-      throw new Error('Failed to extract JSON block from response')
+      // Log the issue and throw an error
+      console.error('Failed to extract JSON block. Raw response:', rawResult);
+      throw new Error('Failed to extract JSON block from response');
     }
 
-    console.log('Extracted JSON String:', jsonString)
+    console.log('Extracted JSON String:', jsonString);
 
-    // Parse the JSON string into a JavaScript object
-    const parsedObject = JSON.parse(jsonString)
+    // Parse the JSON string
+    let parsedObject: SlideContent[] | null = null;
+    try {
+      parsedObject = JSON.parse(jsonString);
 
-    if (!Array.isArray(parsedObject)) {
-      throw new Error('Invalid JSON format: Expected an array of objects')
+      if (!Array.isArray(parsedObject)) {
+        throw new Error('Parsed JSON is not an array of objects');
+      }
+    } catch (jsonError) {
+      console.error('JSON parsing error:', jsonError);
+      throw new Error('Failed to parse the JSON string into an object');
     }
 
-    console.log('Parsed Object:', parsedObject)
+    console.log('Parsed Object:', parsedObject);
 
-    return parsedObject // Return the array of objects
+    // Return the parsed object
+    return parsedObject;
   } catch (error) {
-    console.error(error)
-    throw new Error('Failed to convert to objects')
+    console.error('Error during AI processing or JSON conversion:', error);
+
+    // Fallback: Return a default object if parsing fails
+    const fallbackSlides: SlideContent[] = Array.from({ length: slideCount }, (_, index) => ({
+      title: `Slide ${index + 1}`,
+      content: [
+        'This is a fallback slide content due to an error during processing.',
+        'Please review the input or retry generating the presentation.',
+      ],
+    }));
+
+    console.log('Returning fallback object:', fallbackSlides);
+
+    return fallbackSlides; // Return the fallback object
   }
 }
+
 
 export async function CreatePowerpointFromArrayOfObjects(
   _titleAndDescription: TitleDescription,

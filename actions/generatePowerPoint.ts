@@ -52,93 +52,63 @@ type TitleDescription = z.infer<typeof TitleAndDescriptionSchema>
 
 export async function CreatePowerpoint(videoId: string) {
   try {
-    const user = await currentUser()
+    const user = await currentUser();
 
     if (!user || !user?.id) {
-      return {
-        success: false,
-      }
+      return { success: false };
     }
-    // const dbUser = await db.user.findFirst({
-    //   where: {
-    //     id: user.id,
-    //   },
-    // });
 
-    // if (!dbUser) {
-    //   return {
-    //     success: false,
-    //   };
-    // }
-
-    const { length, subtitlesURL, videoName } =
-      await GetVideoLengthAndSubtitles(videoId)
+    const { length, subtitlesURL, videoName } = await GetVideoLengthAndSubtitles(videoId);
 
     if (length && length > 900) {
-      throw new Error('Video needs to be less than 10 minutes')
+      throw new Error('Video needs to be less than 10 minutes');
     }
 
     if (!subtitlesURL) {
-      throw new Error('No subtitles found')
+      throw new Error('No subtitles found');
     }
 
-    const parsedSubtitles = await parseXMLContent(subtitlesURL)
+    const parsedSubtitles = await parseXMLContent(subtitlesURL);
     if (!parsedSubtitles) {
-      throw new Error('Failed to parse subtitles')
+      throw new Error('Failed to parse subtitles');
     }
 
-    const fullText = parsedSubtitles?.map((item) => item.text).join(' ')
-    console.log('Full Video Text', fullText)
+    const fullText = parsedSubtitles.map((item) => item.text).join(' ');
+    console.log('Full Video Text', fullText);
 
     const [titleAndDescription, slideObjects] = await Promise.all([
       CreateTitleAndDescription(fullText),
       ConvertToObjects(fullText),
-    ])
+    ]);
 
     if (!slideObjects) {
-      throw new Error('Failed to convert to objects')
+      throw new Error('Failed to convert to objects');
     }
 
-    const { fileName, filePath } = await CreatePowerpointFromArrayOfObjects(
+    const { fileBuffer, fileName } = await CreatePowerpointFromArrayOfObjects(
       titleAndDescription,
       slideObjects,
       videoName,
-      user?.id,
-    )
-    console.log(fileName, filePath)
-
-    const fileBuffer = await fs.promises.readFile(filePath);
-    const UploadResult = await UploadPowerpointToUploadThing(
-      fileBuffer,
-      fileName
+      user?.id
     );
+    // @ts-ignore
+    const uploadResult = await UploadPowerpointToUploadThing(fileBuffer, fileName);
+    console.log('Upload Result:', uploadResult);
 
-    console.log(UploadResult)
-
-    if (!UploadResult[0].data?.url) {
-      throw new Error("Upload failed - No URL returned");
+    if (!uploadResult[0].data?.url) {
+      throw new Error('Upload failed - No URL returned');
     }
-
-    // await db.generatedPowerpoints.create({
-    //   data: {
-    //     link: UploadResult[0].data?.url,
-    //     ownerId: user.id,
-    //     title: titleAndDescription.title,
-    //     description: titleAndDescription.description,
-    //   },
-    // });
-
-    // await fs.promises.unlink(filePath);
 
     return {
       success: true,
-      downloadUrl: UploadResult[0].data.url, // Return the download URL
-    }
+      downloadUrl: uploadResult[0].data.url, // Return the download URL
+    };
   } catch (error) {
-    console.error(error)
-    throw new Error('Failed to create powerpoint')
+    console.error(error);
+    throw new Error('Failed to create PowerPoint');
   }
 }
+
 
 export async function GetVideoLengthAndSubtitles(
   videoId: string,
@@ -336,37 +306,14 @@ export async function CreatePowerpointFromArrayOfObjects(
   _titleAndDescription: TitleDescription,
   slides: SlideContent[],
   videoName: string,
-  _userId: string,
+  _userId: string
 ) {
-  const pptx = new pptxgen()
+  const pptx = new pptxgen();
 
-  const titleSlide = pptx.addSlide()
-  titleSlide.background = { color: '#FFFFFF' }
+  // Add slides
+  const titleSlide = pptx.addSlide();
+  titleSlide.background = { color: '#FFFFFF' };
 
-  // titleSlide.addText(titleAndDescription.title, {
-  //   x: 0,
-  //   y: "40%",
-  //   w: "100%",
-  //   h: 1,
-  //   fontSize: 33,
-  //   bold: true,
-  //   color: "003366",
-  //   align: "center",
-  //   fontFace: "Helvetica",
-  // });
-
-  // titleSlide.addText(titleAndDescription.description, {
-  //   x: 0,
-  //   y: "58%",
-  //   w: "100%",
-  //   h: 0.75,
-  //   fontSize: 18,
-  //   color: "888888",
-  //   align: "center",
-  //   fontFace: "Helvetica",
-  // });
-
-  // Add the video name
   titleSlide.addText(`Presentation: ${videoName}`, {
     x: 0,
     y: '55%',
@@ -377,12 +324,11 @@ export async function CreatePowerpointFromArrayOfObjects(
     color: '555555',
     align: 'center',
     fontFace: 'Helvetica',
-  })
+  });
 
-  slides?.forEach(({ title, content }: SlideContent) => {
-    const slide = pptx.addSlide()
+  slides.forEach(({ title, content }) => {
+    const slide = pptx.addSlide();
 
-    // Add slide title
     slide.addText(title, {
       x: 0.5,
       y: 0.5,
@@ -393,31 +339,20 @@ export async function CreatePowerpointFromArrayOfObjects(
       color: '003366',
       align: 'center',
       fontFace: 'Arial',
-    })
+    });
 
-    let bulletPoints: string[] = []
-
-    // Handle content as either string or array
+    let bulletPoints: string[] = [];
     if (typeof content === 'string') {
-      // @ts-ignore
-      bulletPoints = content.split('. ').map((sentence: any) => sentence.trim())
+         // @ts-ignore
+      bulletPoints = content.split('. ').map((sentence : any) => sentence.trim());
     } else if (Array.isArray(content)) {
-      bulletPoints = content.map((sentence) => sentence.trim())
+      bulletPoints = content.map((sentence) => sentence.trim());
     }
 
-    // Log a warning if content is neither a string nor an array
-    if (!bulletPoints.length) {
-      console.warn(
-        `Content for slide "${title}" is not a string or an array. Skipping.`,
-      )
-      return
-    }
-
-    // Add bullet points to the slide
-    bulletPoints.forEach((bullet: string, index: number) => {
+    bulletPoints.forEach((bullet, index) => {
       slide.addText(bullet, {
         x: 1,
-        y: 1.8 + index * 0.5, // Adjust vertical position per bullet
+        y: 1.8 + index * 0.5,
         w: 8,
         h: 0.5,
         fontSize: 15,
@@ -425,58 +360,43 @@ export async function CreatePowerpointFromArrayOfObjects(
         align: 'left',
         fontFace: 'Arial',
         bullet: true,
-      })
-    })
-  })
+      });
+    });
+  });
 
   try {
-    // // Resolve the user's downloads directory
-    // const downloadsDir = path.join(os.homedir(), 'Downloads')
+       // @ts-ignore
+    const fileBuffer = await pptx.write('nodebuffer'); // Generate in-memory buffer
+    const sanitizedVideoName = videoName.replace(/[^a-zA-Z0-9-_]/g, '_');
+    const fileName = `Presentation-${sanitizedVideoName}.pptx`;
 
-    // // Ensure the directory exists
-    // if (!fs.existsSync(downloadsDir)) {
-    //   fs.mkdirSync(downloadsDir, { recursive: true })
-    // }
-
-    // Sanitize videoName to remove any invalid file system characters
-    const sanitizedVideoName = videoName.replace(/[^a-zA-Z0-9-_]/g, '_')
-
-    // Generate the file name, including the sanitized videoName
-    const fileName = `Presentation-${sanitizedVideoName}.pptx`
-
-    const filePath =  fileName
-
-    // Write the PowerPoint file
-    await pptx.writeFile({ fileName: filePath })
-
-    return {
-      fileName,
-      filePath,
-    }
+    return { fileBuffer, fileName };
   } catch (error) {
-    console.error(error)
-    throw new Error('Failed to create powerpoint')
+    console.error('Error generating PowerPoint:', error);
+    throw new Error('Failed to create PowerPoint');
   }
 }
 
+
 export async function UploadPowerpointToUploadThing(
   fileBuffer: Buffer,
-  fileName: string,
+  fileName: string
 ): Promise<UploadFileResult[]> {
   try {
     const file = new File([fileBuffer], fileName, {
       type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    })
+    });
 
-    const response = await utapi.uploadFiles([file])
+    const response = await utapi.uploadFiles([file]);
 
     if (!response?.[0].data?.url) {
-      throw new Error('Upload failed - No URL returned')
+      throw new Error('Upload failed - No URL returned');
     }
 
-    return response
+    return response;
   } catch (error) {
-    console.error(error)
-    throw new Error('Failed to upload powerpoint to uploadthing')
+    console.error(error);
+    throw new Error('Failed to upload PowerPoint to UploadThing');
   }
 }
+

@@ -430,13 +430,13 @@ export async function CreatePowerpointFromArrayOfObjects(
   })
 
   try {
-    // Resolve the user's downloads directory
-    const downloadsDir = path.join(os.homedir(), 'Downloads')
+    // // Resolve the user's downloads directory
+    // const downloadsDir = path.join(os.homedir(), 'Downloads')
 
-    // Ensure the directory exists
-    if (!fs.existsSync(downloadsDir)) {
-      fs.mkdirSync(downloadsDir, { recursive: true })
-    }
+    // // Ensure the directory exists
+    // if (!fs.existsSync(downloadsDir)) {
+    //   fs.mkdirSync(downloadsDir, { recursive: true })
+    // }
 
     // Sanitize videoName to remove any invalid file system characters
     const sanitizedVideoName = videoName.replace(/[^a-zA-Z0-9-_]/g, '_')
@@ -444,7 +444,7 @@ export async function CreatePowerpointFromArrayOfObjects(
     // Generate the file name, including the sanitized videoName
     const fileName = `Presentation-${sanitizedVideoName}.pptx`
 
-    const filePath = path.join(downloadsDir, fileName)
+    const filePath =  fileName
 
     // Write the PowerPoint file
     await pptx.writeFile({ fileName: filePath })

@@ -102,7 +102,7 @@ function Benefits() {
               Create Stunning Presentations
             </h3>
             <p className="mt-4 leading-relaxed">
-              No design experience required – SlideTube-AI makes it easy to
+              No design experience required &lsquo; SlideTube-AI makes it easy to
               create beautiful, professional presentations every time.
             </p>
           </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 function Testmonials() {
   return (
@@ -23,10 +24,10 @@ function Testmonials() {
             'md:text-6xl md:leading-tight',
           )}
         >
-            Don’t Just Take Our Word for It
+            Don&lsquo;t Just Take Our Word for It
         </h2>
         <p className="text-xl text-gray-100 md:text-center md:text-2xl">
-          Here's what others have to say about us.
+          Here&lsquo;s what others have to say about us.
         </p>
       </div>
     </div>
@@ -37,7 +38,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/kanyewest" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/12.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Kanye West" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/12.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Kanye West" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Jessica M.</h3>
                     <p className="text-gray-500 text-md">Educator</p>
@@ -53,7 +54,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/tim_cook" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Tim Cook" />
+                <div className="flex items-center space-x-4"><Image src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Tim Cook" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Michael B.</h3>
                     <p className="text-gray-500 text-md">Marketing Professional</p>
@@ -69,7 +70,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/kanyewest" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/14.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Kanye West" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/14.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Kanye West" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Sarah L.</h3>
                     <p className="text-gray-500 text-md">College Student</p>
@@ -87,13 +88,13 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/paraga" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/12.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Parag Agrawal" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/12.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Parag Agrawal" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Clara T.</h3>
                     <p className="text-gray-500 text-md">HR Manager</p>
                   </div>
                 </div>
-                <p className="leading-normal text-gray-300 text-md">SlideTube-AI has transformed how our team prepares internal presentations. Whether it's a YouTube video briefing or a webinar, we now create visually appealing, on-brand slides in just a few clicks.</p>
+                <p className="leading-normal text-gray-300 text-md">SlideTube-AI has transformed how our team prepares internal presentations. Whether it&lsquo;s a YouTube video briefing or a webinar, we now create visually appealing, on-brand slides in just a few clicks.</p>
               </div>
             </a>
           </div>
@@ -103,7 +104,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/paraga" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Parag Agrawal" />
+                <div className="flex items-center space-x-4"><Image src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Parag Agrawal" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Parag Agrawal</h3>
                     <p className="text-gray-500 text-md">Content Creator</p>
@@ -119,7 +120,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/dan_schulman" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://pbs.twimg.com/profile_images/516916920482672641/3jCeLgFb_400x400.jpeg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Dan Schulman" />
+                <div className="flex items-center space-x-4"><Image src="https://pbs.twimg.com/profile_images/516916920482672641/3jCeLgFb_400x400.jpeg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Dan Schulman" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Dan Schulman</h3>
                     <p className="text-gray-500 text-md">High School Teacher</p>
@@ -137,13 +138,13 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/satyanadella" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/14.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Satya Nadella" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/14.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Satya Nadella" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Jane Doe</h3>
                     <p className="text-gray-500 text-md">CEO of Albinx.Inc</p>
                   </div>
                 </div>
-                <p className="leading-normal text-gray-300 text-md">I don’t have a background in design, but with SlideTube-AI, I can generate beautiful presentations from online videos in minutes. It’s perfect for pitching to investors or presenting business ideas to my team.</p>
+                <p className="leading-normal text-gray-300 text-md">I don&lsquo;t have a background in design, but with SlideTube-AI, I can generate beautiful presentations from online videos in minutes. It’s perfect for pitching to investors or presenting business ideas to my team.</p>
               </div>
             </a>
           </div>
@@ -153,7 +154,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/dan_schulman" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/2.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Dan Schulman" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/2.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Dan Schulman" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Lara M.</h3>
                     <p className="text-gray-500 text-md">Marketing Director</p>
@@ -169,7 +170,7 @@ function Testmonials() {
             <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur duration-400 group-hover:opacity-100 group-hover:duration-200">
             </div><a href="https://twitter.com/satyanadella" className="cursor-pointer">
               <div className="relative p-6 space-y-6 leading-none rounded-lg bg-slate-800 ring-1 ring-gray-900/5">
-                <div className="flex items-center space-x-4"><img src="https://randomuser.me/api/portraits/women/19.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Satya Nadella" />
+                <div className="flex items-center space-x-4"><Image src="https://randomuser.me/api/portraits/women/19.jpg" className="w-12 h-12 bg-center bg-cover border rounded-full" alt="Satya Nadella" />
                   <div>
                     <h3 className="text-lg font-semibold text-white">Marry K.</h3>
                     <p className="text-gray-500 text-md">Project Manager</p>

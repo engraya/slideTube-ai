@@ -17,8 +17,8 @@ function Pricing() {
         >
           SlideTube-AI Pricing
         </h2>
-      <p className="mt-2 text-xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-3xl">Whether it's just you, or your entire
-        team - we've got you covered.</p>
+      <p className="mt-2 text-xl font-bold tracking-tight dark:text-white text-gray-900 sm:text-3xl">Whether it&lsquo;s just you, or your entire
+        team - we&lsquo;ve got you covered.</p>
     </div>
     <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 dark:text-white text-gray-800">Choose the plan that works best</p>
     <div className="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">

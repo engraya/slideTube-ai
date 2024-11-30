@@ -1,6 +1,7 @@
 import React from 'react'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import Link from 'next/link'
 function CTASections() {
   return (
@@ -26,7 +27,7 @@ function CTASections() {
         </Link>
       </div>
       <div className="lg:w-1/2 lg:ml-12">
-        <img src="https://cdn.pixabay.com/photo/2016/09/21/11/31/youtube-1684601_960_720.png" alt="Tailwind CSS" className="rounded-lg shadow-lg hover:shadow-xl transition duration-200" />
+        <Image src="https://cdn.pixabay.com/photo/2016/09/21/11/31/youtube-1684601_960_720.png" alt="Tailwind CSS" className="rounded-lg shadow-lg hover:shadow-xl transition duration-200" />
       </div>
     </div>
   </div>

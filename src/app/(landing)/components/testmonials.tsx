@@ -176,7 +176,7 @@ function Testmonials() {
                     <p className="text-gray-500 text-md">Project Manager</p>
                   </div>
                 </div>
-                <p className="leading-normal text-gray-300 text-md">As a busy project manager, I rely on SlideTube-AI to streamline the creation of presentations for meetings. With just a link to a YouTube video, I can instantly generate polished slides. It's a total game-changer for my workflow.</p>
+                <p className="leading-normal text-gray-300 text-md">As a busy project manager, I rely on SlideTube-AI to streamline the creation of presentations for meetings. With just a link to a YouTube video, I can instantly generate polished slides. It&lsquo;s a total game-changer for my workflow.</p>
               </div>
             </a>
           </div>

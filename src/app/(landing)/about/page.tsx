@@ -12,7 +12,7 @@ function AboutPage() {
       </h1>
     </div>
     <blockquote className="flex flex-col items-center p-4">
-  <p className="max-w-4xl text-lg font-medium text-slate-200 text-center md:text-xl lg:text-2xl">At SlideTube-AI, we believe in the power of technology to simplify complex tasks. We&lsquo;ve built an intuitive AI-driven platform that makes turning YouTube videos into impactful presentations easy and fast. Whether you're a student looking to summarize a lecture, a professional preparing a report, or a marketer curating video content for a campaign, SlideTube-AI helps you extract key insights and present them effectively.
+  <p className="max-w-4xl text-lg font-medium text-slate-200 text-center md:text-xl lg:text-2xl">At SlideTube-AI, we believe in the power of technology to simplify complex tasks. We&lsquo;ve built an intuitive AI-driven platform that makes turning YouTube videos into impactful presentations easy and fast. Whether you&lsquo;re a student looking to summarize a lecture, a professional preparing a report, or a marketer curating video content for a campaign, SlideTube-AI helps you extract key insights and present them effectively.
 
 Our mission is to enhance productivity by offering a tool that automates the presentation creation process, saving you time and effort without compromising quality.
   </p>

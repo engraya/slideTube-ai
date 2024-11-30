@@ -130,7 +130,7 @@ function Benefits() {
               Perfect for Everyone
             </h3>
             <p className="mt-4 leading-relaxed">
-              Whether you're preparing lessons, client pitches, or marketing
+              Whether you&lsquo;re preparing lessons, client pitches, or marketing
               presentations, SlideTube-AI helps you in many ways
             </p>
           </div>

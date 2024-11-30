@@ -4,16 +4,16 @@
     "next/core-web-vitals", // needed to avoid warning in next.js build: 'The Next.js plugin was not detected in your ESLint configuration'
     "plugin:prettier/recommended"
   ],
-  "rules": {
-    "prettier/prettier": [
-      "warn",
-      {
-        "singleQuote": true,
-        "endOfLine": "auto",
-        "semi": false
-      }
-    ]
-  },
+  // "rules": {
+  //   "prettier/prettier": [
+  //     "warn",
+  //     {
+  //       "singleQuote": true,
+  //       "endOfLine": "auto",
+  //       "semi": false
+  //     }
+  //   ]
+  // },
   "ignorePatterns": ["next-env.d.ts"],
   "overrides": [
     // configuration for typescript files

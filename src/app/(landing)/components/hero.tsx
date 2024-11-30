@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
-
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Icons from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -82,6 +82,7 @@ const Hero = async () => {
               'mx-auto mt-6 flex items-center justify-center space-x-4',
             )}
           >
+            <SignedIn>
             <Link
               href="/generate"
               className={cn(buttonVariants(), 'gap-x-2')}
@@ -89,6 +90,7 @@ const Hero = async () => {
             >
               Try It Now – Free Trial
             </Link>
+            </SignedIn>
             <Link
               href="https://github.com/engraya/slideTube-ai"
               className={cn(buttonVariants({ variant: 'outline' }), 'gap-x-2')}

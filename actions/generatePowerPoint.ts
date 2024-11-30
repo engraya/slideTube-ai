@@ -107,15 +107,17 @@ export async function CreatePowerpoint(videoId: string) {
     )
     console.log(fileName, filePath)
 
-    // const fileBuffer = await fs.promises.readFile(filePath);
-    // const UploadResult = await UploadPowerpointToUploadThing(
-    //   fileBuffer,
-    //   fileName
-    // );
+    const fileBuffer = await fs.promises.readFile(filePath);
+    const UploadResult = await UploadPowerpointToUploadThing(
+      fileBuffer,
+      fileName
+    );
 
-    // if (!UploadResult[0].data?.url) {
-    //   throw new Error("Upload failed - No URL returned");
-    // }
+    console.log(UploadResult)
+
+    if (!UploadResult[0].data?.url) {
+      throw new Error("Upload failed - No URL returned");
+    }
 
     // await db.generatedPowerpoints.create({
     //   data: {
@@ -130,6 +132,7 @@ export async function CreatePowerpoint(videoId: string) {
 
     return {
       success: true,
+      downloadUrl: UploadResult[0].data.url, // Return the download URL
     }
   } catch (error) {
     console.error(error)
@@ -156,12 +159,12 @@ export async function GetVideoLengthAndSubtitles(
     const response = await axios.request(options)
     // console.log(response?.data)
     return {
-      length: response.data.lengthSeconds,
-      videoName: response.data.title,
+      length: response?.data?.lengthSeconds,
+      videoName: response?.data?.title,
       subtitlesURL:
-        response.data.subtitles.subtitles.find(
+        response.data?.subtitles?.subtitles?.find(
           (subtitle: { languageCode: string }) =>
-            subtitle.languageCode === 'en',
+            subtitle?.languageCode === 'en',
         )?.url || null,
     }
   } catch (error) {

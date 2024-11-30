@@ -1,6 +1,25 @@
+"use client";
+
 import Link from 'next/link'
 import React from 'react'
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 function SuccessPage() {
+  const router = useRouter();
+  console.log("Router", router)
+  const downloadUrl = ''
+
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  // const url = `${searchParams}`
+  // console.log("Url Path", url);
+
+
+
+  
+
   return (
     <div className="h-screen w-full ">
       <div className="gap-8r mx-auto flex h-full items-center justify-center">
@@ -28,6 +47,14 @@ function SuccessPage() {
               className="w-full rounded-sm bg-green-500 px-4 py-1 text-white"
             >
               Back to Home
+            </Link>
+          </div>
+          <div className="flex justify-center gap-4">
+            <Link
+              href={downloadUrl}
+              className="w-full rounded-sm border-2 border-green-500 px-4 py-1 text-emerald-950 dark:text-gray-400"
+            >
+              Download Presentation 
             </Link>
           </div>
         </div>

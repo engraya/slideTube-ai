@@ -23,8 +23,9 @@ export default function GenerateForm() {
   const [error, setError] = useState<string | null>(null)
   const [createError, setCreateError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  // @ts-ignore
-  // const onSuccessPresentationCreation = () => toast("Congratulations! Presentation created successfully....!!!");
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
+
 
   const validateYouTubeUrl = (url: string) => {
     const pattern =
@@ -90,15 +91,21 @@ export default function GenerateForm() {
           variant: 'destructive',
         })
       } else {
+        const downloadUrl = result.downloadUrl; // Extract the download URL
+        
         toast({
           title: 'Presentation created successfully....',
           description: 'Pls check your file system and Dashaord',
           variant: 'default',
         })
+        // @ts-ignore
+        setDownloadUrl(downloadUrl); // Set the URL for rendering the download button
+        // Navigate to the success page and pass the download URL
+        // router.push(`/success?downloadUrl=${downloadUrl}`);
       }
       // console.log("Result", result);
       // onSuccessPresentationCreation();
-      router.push(`/success`)
+
       setError(null)
     } catch (error) {
       setIsLoading(false)
@@ -141,7 +148,7 @@ export default function GenerateForm() {
               </div>
             )}
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            {/* <div className="flex flex-col gap-3 sm:flex-row">
               <Input
                 type="url"
                 placeholder="paste YouTube URL here"
@@ -165,7 +172,46 @@ export default function GenerateForm() {
                   'Create'
                 )}
               </Button>
-            </div>
+            </div> */}
+            <div className="flex flex-col gap-3 sm:flex-row">
+  {downloadUrl ? (
+    <a
+      href={downloadUrl}
+      download
+      className="h-12 w-full rounded-xl bg-green-500 px-6 py-3 text-center text-white shadow-md hover:bg-green-600"
+    >
+      Download Presentation
+    </a>
+  ) : (
+    <>
+            <Input
+                type="url"
+                placeholder="paste YouTube URL here"
+                value={url || ''}
+                onChange={handleUrlChange}
+                className="h-12 flex-1 rounded-xl border-slate-200 px-4 focus:border-violet-500 focus:ring-violet-500"
+                disabled={isLoading}
+                aria-label="YouTube URL"
+              />
+                  <Button
+      disabled={!isValid || isLoading}
+      className="h-12 px-6"
+      onClick={handleGenerate}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 size-5 animate-spin" />
+          Creating presentation
+        </>
+      ) : (
+        'Create'
+      )}
+    </Button>
+    </>
+
+  )}
+</div>
+
             <p className="mt-4 text-center text-sm text-slate-500">
               Supported formats: YouTube video URLs (e.g,
               https://youtube.com/watch?v=...)

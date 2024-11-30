@@ -3,15 +3,10 @@
 import Link from 'next/link'
 import React from 'react'
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
 function SuccessPage() {
   const router = useRouter();
   console.log("Router", router)
   const downloadUrl = ''
-
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   // const url = `${searchParams}`
   // console.log("Url Path", url);

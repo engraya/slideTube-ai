@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
+
 import Icons from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const stack = [
-
   {
     title: 'Next.js',
     link: 'https://nextjs.org/',
@@ -23,6 +23,18 @@ const stack = [
     link: 'https://tailwindcss.com/',
     icon: Icons.tailwindCss,
     className: 'hover:text-[#06B6D4]',
+  },
+  {
+    title: 'Prisma',
+    link: 'https://vercel.com/',
+    icon: Icons.prisma,
+    className: 'hover:text-[#3178C6]',
+  },
+  {
+    title: 'Shadcn',
+    link: 'https://vercel.com/',
+    icon: Icons.shadcn,
+    className: 'hover:text-[#3178C6]',
   },
   {
     title: 'Vercel',
@@ -50,7 +62,7 @@ const Hero = async () => {
             )}
           >
             <Balancer>
-            Turn YouTube Videos into Stunning Presentations in Seconds with AI
+              Turn YouTube Videos into Stunning Presentations in Seconds with AI
             </Balancer>
           </h1>
           <p
@@ -59,7 +71,11 @@ const Hero = async () => {
               'md:text-xl',
             )}
           >
-            <Balancer>SlideTube-AI transforms any YouTube video into a professional, editable presentation. Save time, increase productivity, and create captivating slides with just a link</Balancer>
+            <Balancer>
+              SlideTube-AI transforms any YouTube video into a professional,
+              editable presentation. Save time, increase productivity, and
+              create captivating slides with just a link
+            </Balancer>
           </p>
           <div
             className={cn(

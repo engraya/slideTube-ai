@@ -1,17 +1,15 @@
-import React from "react";
-import { redirect } from "next/navigation";
-import GenerateForm from "@/app/components/GenerateForm";
-import { currentUser } from '@clerk/nextjs/server'
+import React from 'react'
+
+import GenerateForm from '@/app/components/GenerateForm'
 
 async function GeneartePage() {
-  const user = await currentUser();
+  // const user = await currentUser();
 
-  if (!user || !user.id) {
-    redirect("/sign-in");
-  }
+  // if (!user || !user.id) {
+  //   redirect("/sign-in");
+  // }
 
-
-  return <GenerateForm />;
+  return <GenerateForm />
 }
 
 export default GeneartePage

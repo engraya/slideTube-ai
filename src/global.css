@@ -5,72 +5,70 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 224 71% 4%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 224 71% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 71% 4%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Violet brand */
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 262 30% 96%;
+    --secondary-foreground: 262 83% 38%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 262 30% 96%;
+    --accent-foreground: 262 83% 38%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 0 0% 3.9%;
+    --ring: 262 83% 58%;
+    --radius: 0.75rem;
 
-    --radius: 0.5rem;
-
-    --sidebar: 210 40% 96.1%;
+    --sidebar: 220 14% 96%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215 16% 57%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20% 65%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 222 47% 7%;
+    --card-foreground: 213 31% 91%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 262 83% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 222 47% 11%;
+    --secondary-foreground: 213 31% 91%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 222 47% 11%;
+    --accent-foreground: 213 31% 91%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 86% 97%;
 
-    --ring: 217.2 32.6% 17.5%;
+    --ring: 262 83% 65%;
 
-    --sidebar: 217.2 32.6% 17.5%;
+    --sidebar: 222 47% 11%;
   }
 }
 
@@ -86,12 +84,26 @@
 
   body {
     @apply antialiased bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
 
+/* Auth pages */
+.auth-page {
+  @apply flex min-h-screen w-full flex-col items-center justify-center gap-10;
+}
 
+/* Subtle dot grid background for hero */
+.dot-grid {
+  background-image: radial-gradient(circle, hsl(262 83% 58% / 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
 
-  /* ======================== Auth Pages */
-  .auth-page {
-    @apply flex min-h-screen w-full flex-col items-center justify-center gap-10;
-  }
+/* Gradient text utility */
+.gradient-text {
+  @apply bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent;
+}
+
+.dark .gradient-text {
+  @apply from-violet-400 via-purple-400 to-indigo-400;
+}

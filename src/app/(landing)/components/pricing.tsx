@@ -1,11 +1,13 @@
 import Link from 'next/link'
-import { CheckCircle } from 'lucide-react'
+import { Check, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
 
 type PricingTier = {
   id: string
   name: string
   price: string
+  period?: string
   description: string
   features: string[]
   cta: string
@@ -15,93 +17,139 @@ type PricingTier = {
 const TIERS: PricingTier[] = [
   {
     id: 'free',
-    name: 'Free Plan',
-    price: '$0 / month',
-    description:
-      'Ideal for individuals or casual users looking to explore the power of SlideTube-AI.',
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    description: 'Perfect for trying out SlideTube AI and occasional use.',
     features: [
-      'Convert up to 5 YouTube videos per month',
-      'Basic slide customization options',
-      'Access to community support',
-      'Export presentations in PDF & PPT format',
+      '5 presentations per month',
+      'Standard AI quality',
+      'Download as .pptx',
+      'Community support',
     ],
-    cta: 'Get started',
+    cta: 'Get started free',
   },
   {
     id: 'pro',
-    name: 'Pro Plan',
-    price: '$20 / month',
-    description:
-      'Perfect for professionals who need more control and advanced features.',
+    name: 'Pro',
+    price: '$20',
+    period: 'per month',
+    description: 'For professionals who create presentations regularly.',
     features: [
-      'Unlimited YouTube video conversions',
-      'Advanced slide design options',
-      'Access to premium templates and styles',
-      'Export presentations in multiple formats',
+      'Unlimited presentations',
+      'Priority AI processing',
+      'Premium slide templates',
+      'Export to PDF & PPT',
+      'Priority email support',
     ],
-    cta: 'Get started',
+    cta: 'Start Pro',
     highlighted: true,
   },
   {
     id: 'enterprise',
-    name: 'Enterprise Plan',
-    price: 'Custom Pricing',
-    description: 'Tailored for businesses or teams with high-volume needs.',
+    name: 'Enterprise',
+    price: 'Custom',
+    description: 'For teams and organisations with high-volume needs.',
     features: [
-      'Unlimited conversions and premium features',
-      'Team collaboration tools',
-      'Custom branding and templates',
-      'Dedicated account manager and 24/7 support',
+      'Unlimited conversions',
+      'Team collaboration',
+      'Custom branding',
+      'SSO & admin controls',
+      'Dedicated account manager',
     ],
-    cta: 'Contact us',
+    cta: 'Contact sales',
   },
 ]
 
-function PricingCard({ id, name, price, description, features, cta, highlighted }: PricingTier) {
+function PricingCard({
+  id,
+  name,
+  price,
+  period,
+  description,
+  features,
+  cta,
+  highlighted,
+}: PricingTier) {
   return (
     <div
       className={cn(
-        'rounded-3xl p-8 xl:p-10',
-        highlighted ? 'bg-white/5 ring-2 ring-indigo-500' : 'ring-1 ring-indigo-500',
+        'relative flex flex-col rounded-2xl border p-8',
+        highlighted
+          ? 'border-primary bg-primary text-primary-foreground shadow-2xl shadow-primary/20'
+          : 'border-border bg-card text-card-foreground hover:border-primary/40 hover:shadow-lg transition-all duration-200',
       )}
     >
-      <div className="flex items-center justify-between gap-x-4">
-        <h2
+      {highlighted && (
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-background px-3 py-1 text-xs font-semibold text-primary shadow">
+            <Zap className="size-3" aria-hidden="true" />
+            Most popular
+          </span>
+        </div>
+      )}
+
+      <div className="mb-6">
+        <h3
           id={id}
-          className="text-lg font-semibold leading-8 text-gray-800 dark:text-white"
+          className={cn(
+            'text-sm font-semibold uppercase tracking-wider',
+            highlighted ? 'text-primary-foreground/70' : 'text-muted-foreground',
+          )}
         >
           {name}
-        </h2>
-        {highlighted && (
-          <p className="rounded-full bg-indigo-500 px-2.5 py-1 text-xs font-semibold leading-5 text-white">
-            Most popular
-          </p>
-        )}
+        </h3>
+        <div className="mt-3 flex items-end gap-1">
+          <span className="text-4xl font-bold tracking-tight">{price}</span>
+          {period && (
+            <span
+              className={cn(
+                'mb-1 text-sm',
+                highlighted ? 'text-primary-foreground/60' : 'text-muted-foreground',
+              )}
+            >
+              / {period}
+            </span>
+          )}
+        </div>
+        <p
+          className={cn(
+            'mt-3 text-sm leading-relaxed',
+            highlighted ? 'text-primary-foreground/80' : 'text-muted-foreground',
+          )}
+        >
+          {description}
+        </p>
       </div>
-      <p className="mt-4 text-sm leading-6 text-gray-500">{description}</p>
-      <p className="mt-6 text-4xl font-bold tracking-tight text-gray-800 dark:text-white">
-        {price}
-      </p>
+
       <Link
-        href="/generate"
+        href={id === 'enterprise' ? 'mailto:claude@myt40.com' : '/generate'}
         aria-describedby={id}
         className={cn(
-          'mt-6 block rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+          'mb-8 block w-full rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition-all',
           highlighted
-            ? 'bg-indigo-500 text-white hover:bg-indigo-400 focus-visible:outline-indigo-500'
-            : 'bg-gray-700 text-white hover:bg-emerald-400 focus-visible:outline-white',
+            ? 'bg-background text-primary hover:bg-background/90'
+            : buttonVariants(),
         )}
       >
         {cta}
       </Link>
-      <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-200 xl:mt-10">
+
+      <ul className="flex flex-col gap-3">
         {features.map((feature) => (
-          <li key={feature} className="flex gap-x-3">
-            <CheckCircle
-              className="h-6 w-5 shrink-0 text-white"
+          <li key={feature} className="flex items-start gap-2.5 text-sm">
+            <Check
+              className={cn(
+                'mt-0.5 size-4 shrink-0',
+                highlighted ? 'text-primary-foreground/80' : 'text-primary',
+              )}
               aria-hidden="true"
             />
-            {feature}
+            <span
+              className={highlighted ? 'text-primary-foreground/90' : 'text-muted-foreground'}
+            >
+              {feature}
+            </span>
           </li>
         ))}
       </ul>
@@ -111,32 +159,27 @@ function PricingCard({ id, name, price, description, features, cta, highlighted 
 
 function Pricing() {
   return (
-    <div className="pt-5" id="pricing">
-      <div className="mx-auto max-w-7xl px-6 pb-20 pt-4 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2
-            className={cn(
-              'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-400 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent drop-shadow-sm',
-              'dark:from-gray-100 dark:to-gray-800',
-              'md:text-6xl md:leading-tight',
-            )}
-          >
-            SlideTube-AI Pricing
-          </h2>
-          <p className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
-            Whether it&apos;s just you, or your entire team — we&apos;ve got you covered.
-          </p>
-        </div>
-        <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-800 dark:text-white">
-          Choose the plan that works best for you.
+    <section id="pricing" className="container mx-auto max-w-6xl px-4 py-20 lg:py-28">
+      {/* Header */}
+      <div className="mx-auto mb-14 max-w-2xl text-center">
+        <span className="mb-3 inline-block rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+          Pricing
+        </span>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          Simple, transparent{' '}
+          <span className="gradient-text">pricing</span>
+        </h2>
+        <p className="mt-4 text-base text-muted-foreground md:text-lg">
+          Start free. Upgrade when you need more. No hidden fees.
         </p>
-        <div className="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {TIERS.map((tier) => (
-            <PricingCard key={tier.id} {...tier} />
-          ))}
-        </div>
       </div>
-    </div>
+
+      <div className="grid items-center gap-6 lg:grid-cols-3">
+        {TIERS.map((tier) => (
+          <PricingCard key={tier.id} {...tier} />
+        ))}
+      </div>
+    </section>
   )
 }
 

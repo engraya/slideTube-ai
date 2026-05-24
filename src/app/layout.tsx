@@ -28,13 +28,22 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={fontSans.variable}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* Skip to main content for keyboard/screen-reader users */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+          >
+            Skip to main content
+          </a>
           <div
             className={cn(
               'fixed h-screen w-full bg-gradient-to-br from-background to-blue-50 dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-slate-900',
             )}
           />
           <Header />
-          <main className={cn('relative z-10 min-h-screen')}>{children}</main>
+          <main id="main-content" className={cn('relative z-10 min-h-screen')}>
+            {children}
+          </main>
           <Footer />
           <Analytics />
         </ThemeProvider>

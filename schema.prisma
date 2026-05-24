@@ -3,25 +3,31 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
-}
-
-model GeneratedPowerpoints {
-    id String @id @default(cuid())
-    link String
-    owner User @relation(fields: [ownerId], references: [id])
-    ownerId String
-    title String
-    description String 
-    createdAt DateTime @default(now()) @map("created_at")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id String @unique
-    name String 
-    email String @unique
-    createdAt DateTime @default(now()) @map("created_at")
-    Powerpoints GeneratedPowerpoints[] 
-    @@map(name: "users")
+  id          String                 @id
+  name        String                 @db.VarChar(255)
+  email       String                 @unique @db.VarChar(255)
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+  Powerpoints GeneratedPowerpoints[]
+
+  @@map("users")
+}
+
+model GeneratedPowerpoints {
+  id          String   @id @default(cuid())
+  link        String
+  title       String   @db.VarChar(500)
+  description String   @db.Text
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([ownerId])
+  @@map("generated_powerpoints")
 }

@@ -1,39 +1,41 @@
-"use server"
+'use server'
 
 import { currentUser } from '@clerk/nextjs/server'
-import { db } from "../db";
+
+import { db } from '../db'
+import { UserCreateSchema } from '@/lib/schemas'
 
 export async function CreateUserIfNull() {
   try {
+    const user = await currentUser()
+    if (!user) return { success: false }
 
-    const user = await currentUser();
+    const parsed = UserCreateSchema.safeParse({
+      id: user.id,
+      name:
+        `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || 'Anonymous',
+      email: user.emailAddresses[0]?.emailAddress,
+    })
 
-    if (!user) {
-      return { success: false };
+    if (!parsed.success) {
+      console.error('[CreateUserIfNull] Invalid user data:', parsed.error.format())
+      return { success: false }
     }
 
-    const existingUser = await db.user.findUnique({
-      where: {
-        id: user.id,
+    const existingUser = await db.user.findUnique({ where: { id: parsed.data.id } })
+    if (existingUser) return { success: true }
+
+    await db.user.create({
+      data: {
+        id: parsed.data.id,
+        name: parsed.data.name,
+        email: parsed.data.email,
       },
-    });
+    })
 
-    if (!existingUser && user.emailAddresses[0]) {
-      await db.user.create({
-        data: {
-          id: user.id,
-          name: user.firstName + " " + user.lastName,
-        //   @ts-ignore
-          email: user.emailAddresses[0],
-        },
-      });
-
-      return { success: true };
-    }
-
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error("Error creating user:", error);
-    return { success: false };
+    console.error('[CreateUserIfNull] Error:', error)
+    return { success: false }
   }
 }

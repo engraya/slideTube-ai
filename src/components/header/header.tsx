@@ -38,7 +38,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <nav className="hidden justify-center md:flex md:grow">
+          <nav className="hidden justify-center md:flex md:grow" aria-label="Main navigation">
             <ul className="flex justify-center space-x-4 hover:text-sky-300">
               <li>
                 <Link href="/" className="font-bold hover:text-secondary">
@@ -51,7 +51,11 @@ const Header = () => {
                 </Link>
               </li>
               <SignedIn>
-                {/* <li><Link href="/dashboard" className="hover:text-secondary font-bold">Dashboard</Link></li> */}
+                <li>
+                  <Link href="/dashboard" className="font-bold hover:text-secondary">
+                    Dashboard
+                  </Link>
+                </li>
                 <li>
                   <Link
                     href="/generate"
@@ -69,7 +73,10 @@ const Header = () => {
             <button
               id="hamburger"
               className="focus:outline-none dark:text-slate-900"
-              onClick={toggleMenu} // Toggle the menu on click
+              onClick={toggleMenu}
+              aria-controls="mobile-menu"
+              aria-expanded={isMenuOpen}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <svg
                 className="size-5 text-slate-600"
@@ -141,7 +148,11 @@ const Header = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <>
-            <nav className="absolute left-0 top-16 w-full bg-slate-600  text-white hover:text-sky-300 md:hidden">
+            <nav
+              id="mobile-menu"
+              className="absolute left-0 top-16 w-full bg-slate-600 text-white hover:text-sky-300 md:hidden"
+              aria-label="Mobile navigation"
+            >
               <ul className="flex cursor-pointer flex-col items-center space-y-4 border-b p-4">
                 <li>
                   <Link
@@ -162,9 +173,15 @@ const Header = () => {
                   </Link>
                 </li>
                 <SignedIn>
-                  {/* <li>
-                <Link href="/dashboard" className="hover:text-sky-300 cursor-pointer font-bold" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
-              </li> */}
+                  <li>
+                    <Link
+                      href="/dashboard"
+                      className="cursor-pointer font-bold hover:text-sky-300"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       href="/generate"

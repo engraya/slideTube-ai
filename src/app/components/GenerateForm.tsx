@@ -2,9 +2,8 @@
 
 import 'react-toastify/dist/ReactToastify.css'
 
-import { Loader2, VideoIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { Download, Loader2, RefreshCw, VideoIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 
 import MaxWidthWrapper from '@/components/common/MaxWidthWrapper'
@@ -12,217 +11,135 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { useGenerate } from '@/hooks/use-generate'
 
-import { CreatePowerpoint } from '../../../actions/generatePowerPoint'
 import ErrorContainer from './ErrorContainer'
+
 export default function GenerateForm() {
   const { toast } = useToast()
-  const router = useRouter()
-  const [url, setUrl] = useState<string | null>('')
-  const [isValid, setIsValid] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
-  const [createError, setCreateError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const { state, handleUrlChange, handleGenerate, handleReset } = useGenerate()
 
-
-
-  const validateYouTubeUrl = (url: string) => {
-    const pattern =
-      /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    return pattern.test(url)
-  }
-
-  const getVideoId = (url: string) => {
-    const match = url.match(
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-    )
-    return match ? match[1] : null
-  }
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUrl = e.target.value.trim()
-
-    if (!newUrl) {
-      setError(null)
-      setIsValid(false)
-      return
+  useEffect(() => {
+    if (state.status === 'success') {
+      toast({
+        title: 'Presentation created!',
+        description: `"${state.title}" is ready. Visit your Dashboard to view all presentations.`,
+      })
     }
-
-    setUrl(newUrl)
-
-    const videoId = getVideoId(newUrl)
-    if (validateYouTubeUrl(newUrl) && videoId) {
-      setError(null)
-      setIsValid(true)
-    } else {
-      setError('Invalid YouTube URL')
-      setIsValid(false)
-    }
-  }
-
-  const handleGenerate = async () => {
-    if (!url) {
-      setError('Please enter a valid YouTube URL')
-      return
-    }
-
-    if (!isValid) {
-      setError('Invalid YouTube URL')
-      return
-    }
-
-    setError(null)
-
-    const videoId = getVideoId(url || '')
-    if (!videoId) {
-      setError('Invalid YouTube URL')
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      const result = await CreatePowerpoint(videoId)
-      if (!result.success) {
-        toast({
-          title: 'Something went wrong',
-          description: 'Please try again later',
-          variant: 'destructive',
-        })
-      } else {
-        const downloadUrl = result.downloadUrl; // Extract the download URL
-        
-        toast({
-          title: 'Presentation created successfully....',
-          description: 'Pls check your file system and Dashaord',
-          variant: 'default',
-        })
-        // @ts-ignore
-        setDownloadUrl(downloadUrl); // Set the URL for rendering the download button
-        // Navigate to the success page and pass the download URL
-        // router.push(`/success?downloadUrl=${downloadUrl}`);
-      }
-      // console.log("Result", result);
-      // onSuccessPresentationCreation();
-
-      setError(null)
-    } catch (error) {
-      setIsLoading(false)
-      setError('Please try again later to create a presentation')
-      setCreateError('Consider refreshing your browser to try again.!')
-      console.error(error)
+    if (state.status === 'error') {
       toast({
         title: 'Something went wrong',
-        description: 'Please try again later',
+        description: state.error ?? 'Please try again.',
         variant: 'destructive',
       })
     }
-  }
+  }, [state.status, state.error, state.title, toast])
+
+  const isLoading = state.status === 'loading'
 
   return (
     <div className="min-h-screen py-12">
       <MaxWidthWrapper>
         <div className="mx-auto max-w-3xl">
           <h1 className="mb-8 bg-gradient-to-br from-gray-700 via-gray-200 to-gray-600 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent drop-shadow-sm">
-            Create Beautiful Presentations{' '}
+            Create Beautiful Presentations
             <span className="mt-2 block text-lg font-normal text-gray-500">
               Transform any YouTube video into a professional PowerPoint
             </span>
           </h1>
+
+          {/* Screen-reader live region for async status announcements */}
+          <div aria-live="polite" aria-atomic="true" className="sr-only">
+            {isLoading && 'Generating your presentation, please wait...'}
+            {state.status === 'success' &&
+              `Presentation "${state.title}" is ready for download.`}
+            {state.status === 'error' && state.error}
+          </div>
+
           <Card className="border-0 bg-white/80 p-8 shadow-xl backdrop-blur-sm">
-            {isValid ? (
+            {state.isValid && state.videoId ? (
               <div className="mb-8 aspect-video overflow-hidden rounded-xl shadow-lg">
                 <iframe
                   className="size-full"
-                  src={`https://www.youtube.com/embed/${getVideoId(url || '')}`}
+                  src={`https://www.youtube.com/embed/${state.videoId}`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  title="YouTube video player"
+                  title="YouTube video preview"
                 />
               </div>
             ) : (
               <div className="mb-8 flex aspect-video flex-col items-center justify-center rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 text-slate-500 shadow-inner">
-                <VideoIcon className="mb-4 size-16 text-slate-500" />
-                <p>Enter a YouTube URL to get started.</p>
+                <VideoIcon
+                  className="mb-4 size-16 text-slate-400"
+                  aria-hidden="true"
+                />
+                <p className="text-sm">Enter a YouTube URL to preview</p>
               </div>
             )}
 
-            {/* <div className="flex flex-col gap-3 sm:flex-row">
-              <Input
-                type="url"
-                placeholder="paste YouTube URL here"
-                value={url || ''}
-                onChange={handleUrlChange}
-                className="h-12 flex-1 rounded-xl border-slate-200 px-4 focus:border-violet-500 focus:ring-violet-500"
-                disabled={isLoading}
-                aria-label="YouTube URL"
-              />
-              <Button
-                disabled={!isValid || isLoading}
-                className="h-12 px-6"
-                onClick={handleGenerate}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 size-5 animate-spin" />
-                    Creating a presentation
-                  </>
-                ) : (
-                  'Create'
-                )}
-              </Button>
-            </div> */}
-            <div className="flex flex-col gap-3 sm:flex-row">
-  {downloadUrl ? (
-    <a
-      href={downloadUrl}
-      download
-      className="h-12 w-full rounded-xl bg-green-500 px-6 py-3 text-center text-white shadow-md hover:bg-green-600"
-    >
-      Download Presentation
-    </a>
-  ) : (
-    <>
-            <Input
-                type="url"
-                placeholder="paste YouTube URL here"
-                value={url || ''}
-                onChange={handleUrlChange}
-                className="h-12 flex-1 rounded-xl border-slate-200 px-4 focus:border-violet-500 focus:ring-violet-500"
-                disabled={isLoading}
-                aria-label="YouTube URL"
-              />
-                  <Button
-      disabled={!isValid || isLoading}
-      className="h-12 px-6"
-      onClick={handleGenerate}
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="mr-2 size-5 animate-spin" />
-          Creating presentation
-        </>
-      ) : (
-        'Create'
-      )}
-    </Button>
-    </>
-
-  )}
-</div>
+            {state.status === 'success' && state.downloadUrl ? (
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={state.downloadUrl}
+                  download
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-green-500 px-6 text-white shadow-md transition-colors hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                >
+                  <Download className="size-4" aria-hidden="true" />
+                  Download Presentation
+                </a>
+                <Button variant="outline" className="h-12 gap-2" onClick={handleReset}>
+                  <RefreshCw className="size-4" aria-hidden="true" />
+                  Create Another
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="youtube-url" className="sr-only">
+                  YouTube URL
+                </label>
+                <Input
+                  id="youtube-url"
+                  type="url"
+                  placeholder="Paste YouTube URL (e.g. https://youtube.com/watch?v=...)"
+                  value={state.url}
+                  onChange={(e) => handleUrlChange(e.target.value)}
+                  className="h-12 flex-1 rounded-xl border-slate-200 px-4 focus:border-violet-500 focus:ring-violet-500"
+                  disabled={isLoading}
+                  aria-invalid={state.status === 'error'}
+                  aria-describedby={state.error ? 'generate-error' : undefined}
+                />
+                <Button
+                  disabled={!state.isValid || isLoading}
+                  className="h-12 px-6"
+                  onClick={handleGenerate}
+                  aria-busy={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2
+                        className="mr-2 size-5 animate-spin"
+                        aria-hidden="true"
+                      />
+                      Generating...
+                    </>
+                  ) : (
+                    'Create'
+                  )}
+                </Button>
+              </div>
+            )}
 
             <p className="mt-4 text-center text-sm text-slate-500">
-              Supported formats: YouTube video URLs (e.g,
-              https://youtube.com/watch?v=...)
+              Supports YouTube videos up to 15 minutes with English captions
             </p>
-            {error && createError && (
-              <>
-                <ErrorContainer error={error} />
-                <p className="mx-auto flex items-center justify-center italic text-red-800 dark:text-red-400">
-                  {createError}
+
+            {state.error && (
+              <div id="generate-error">
+                <ErrorContainer error={state.error} />
+                <p className="mt-2 text-center text-sm italic text-slate-500">
+                  If the issue persists, try refreshing the page.
                 </p>
-              </>
+              </div>
             )}
           </Card>
         </div>

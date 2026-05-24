@@ -35,11 +35,7 @@ export default function RootLayout({
           >
             Skip to main content
           </a>
-          <div
-            className={cn(
-              'fixed h-screen w-full bg-gradient-to-br from-background to-blue-50 dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-slate-900',
-            )}
-          />
+          <div className="fixed inset-0 -z-10 bg-background" />
           <Header />
           <main id="main-content" className={cn('relative z-10 min-h-screen')}>
             {children}

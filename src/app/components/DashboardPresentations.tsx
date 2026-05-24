@@ -1,79 +1,97 @@
-import React from "react";
-import { GeneratedPowerpoints } from "@prisma/client";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Presentation } from "lucide-react";
+import React from 'react'
+import { GeneratedPowerpoints } from '@prisma/client'
+import { formatDistanceToNow } from 'date-fns'
+import Link from 'next/link'
+import { ExternalLink, Presentation, Zap, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
+function PresentationCard({ presentation }: { presentation: GeneratedPowerpoints }) {
+  return (
+    <div className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+      {/* Slide thumbnail placeholder */}
+      <div className="mb-4 flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-primary/10 via-primary/5 to-muted">
+        <div className="flex flex-col items-center gap-2 opacity-50 group-hover:opacity-70 transition-opacity">
+          <Presentation className="size-8 text-primary" aria-hidden="true" />
+          <div className="space-y-1.5 w-16">
+            <div className="h-1.5 rounded-full bg-primary/40" />
+            <div className="h-1 rounded-full bg-muted-foreground/30" style={{ width: '80%' }} />
+            <div className="h-1 rounded-full bg-muted-foreground/30" style={{ width: '60%' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col">
+        <h3 className="line-clamp-1 font-semibold text-foreground group-hover:text-primary transition-colors">
+          {presentation.title || 'Untitled Presentation'}
+        </h3>
+        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {presentation.description || 'No description available.'}
+        </p>
+
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Calendar className="size-3" aria-hidden="true" />
+            {formatDistanceToNow(new Date(presentation.createdAt), { addSuffix: true })}
+          </span>
+          <a
+            href={presentation.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-xs font-medium text-primary',
+              'transition-colors hover:bg-primary hover:text-primary-foreground',
+            )}
+          >
+            <ExternalLink className="size-3" aria-hidden="true" />
+            Download
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/20 py-20 text-center">
+      <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10">
+        <Presentation className="size-7 text-primary" aria-hidden="true" />
+      </div>
+      <h3 className="text-base font-semibold text-foreground">
+        No presentations yet
+      </h3>
+      <p className="mt-1.5 max-w-xs text-sm text-muted-foreground">
+        Generate your first presentation from a YouTube video. It takes under
+        60 seconds.
+      </p>
+      <Link href="/generate" className="mt-6">
+        <Button className="gap-2">
+          <Zap className="size-4" aria-hidden="true" />
+          Create your first presentation
+        </Button>
+      </Link>
+    </div>
+  )
+}
+
 const DashboardPresentations = ({
   presentations,
 }: {
-  presentations: GeneratedPowerpoints[];
+  presentations: GeneratedPowerpoints[]
 }) => {
   if (!presentations || presentations.length === 0) {
-    return (
-      <Card className="bg-white/80 backdrop-blur-sm">
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <Presentation className="h-12 w-12 text-gray-400 mb-4" />
-          <p className="text-lg font-medium text-gray-900">
-            No presentations yet
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            Generate your first presentation to get started
-          </p>
-          <Link href="/generate">
-            <Button className="mt-4">Create Presentation</Button>
-          </Link>
-        </CardContent>
-      </Card>
-    );
+    return <EmptyState />
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {presentations.map((presentation) => (
-        <Card
-          key={presentation.id}
-          className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow"
-        >
-          <CardHeader>
-            <CardTitle className="line-clamp-1">
-              {presentation.title || "Untitled Presentation"}
-            </CardTitle>
-            <CardDescription>
-              Created{" "}
-              {formatDistanceToNow(new Date(presentation.createdAt), {
-                addSuffix: true,
-              })}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-              {presentation.description || "No description available"}
-            </p>
-            <div className="flex justify-between items-center">
-              <Link
-                href={presentation.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-              >
-                <ExternalLink className="h-4 w-4 mr-1" />
-                View Presentation
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <PresentationCard key={presentation.id} presentation={presentation} />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default DashboardPresentations;
+export default DashboardPresentations

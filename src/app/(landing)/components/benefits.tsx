@@ -1,137 +1,99 @@
-import React from 'react'
+import { Clock, TrendingUp, Award, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+const stats = [
+  {
+    value: '60s',
+    label: 'Average generation time',
+    description: 'From URL paste to downloadable .pptx file.',
+    icon: Clock,
+    accent: 'text-violet-600 dark:text-violet-400',
+    bg: 'bg-violet-50 dark:bg-violet-950/30',
+  },
+  {
+    value: '10×',
+    label: 'Faster than manual slides',
+    description: 'Stop spending hours on formatting. Focus on what matters.',
+    icon: TrendingUp,
+    accent: 'text-blue-600 dark:text-blue-400',
+    bg: 'bg-blue-50 dark:bg-blue-950/30',
+  },
+  {
+    value: '100%',
+    label: 'Editable output',
+    description: 'Every slide is fully editable in PowerPoint, Keynote, or Google Slides.',
+    icon: Award,
+    accent: 'text-emerald-600 dark:text-emerald-400',
+    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+  },
+  {
+    value: 'Zero',
+    label: 'Design skills required',
+    description: 'AI handles structure and layout so you don\'t have to.',
+    icon: Users,
+    accent: 'text-orange-600 dark:text-orange-400',
+    bg: 'bg-orange-50 dark:bg-orange-950/30',
+  },
+]
 
 function Benefits() {
   return (
     <section
       id="benefits"
-      className={cn(
-        'container space-y-6 rounded-md bg-secondary py-8',
-        'md:py-12',
-        'lg:py-24',
-      )}
+      className="border-y border-border bg-muted/30 py-20 lg:py-28"
     >
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2
-          className={cn(
-            'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-400 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent drop-shadow-sm',
-            'dark:from-gray-100 dark:to-gray-800',
-            'md:text-6xl md:leading-tight',
-          )}
-        >
-          Why Choose SlideTube-AI?
-        </h2>
-        <div className="mt-16 grid gap-16 sm:mt-24 sm:grid-cols-4 sm:gap-8">
-          <div className="text-center">
-            <div className="relative left-2 mx-auto size-20 sm:size-28 lg:size-32">
-              <div className="relative z-10 flex size-full items-center justify-center rounded-full border border-gray-300 bg-white shadow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="0.5"
-                  stroke="currentColor"
-                  className="size-1/2 text-gray-500"
-                  aria-hidden="true"
+      <div className="container mx-auto max-w-6xl px-4">
+        {/* Header */}
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <span className="mb-3 inline-block rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            Why SlideTube AI
+          </span>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Built for speed,{' '}
+            <span className="gradient-text">polished by AI</span>
+          </h2>
+          <p className="mt-4 text-base text-muted-foreground md:text-lg">
+            Every number here reflects a real user workflow improvement.
+          </p>
+        </div>
+
+        {/* Stats grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon
+            return (
+              <div
+                key={stat.label}
+                className={cn(
+                  'group rounded-xl border border-border p-6 transition-all duration-200 hover:shadow-md',
+                  stat.bg,
+                )}
+              >
+                <div
+                  className={cn(
+                    'mb-4 inline-flex size-10 items-center justify-center rounded-lg bg-background',
+                    stat.accent,
+                  )}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                  />
-                </svg>
-              </div>
-              <div className="absolute inset-0 -translate-x-2 -translate-y-2 rounded-full bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900" />
-            </div>
-            <h3 className="font-headline mt-6 text-xl sm:mt-10 sm:text-2xl">Save Time</h3>
-            <p className="mt-4 leading-relaxed">
-              Automatically generate presentations from YouTube videos without spending hours on manual slide creation.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="relative left-2 mx-auto size-20 sm:size-28 lg:size-32">
-              <div className="relative z-10 flex size-full items-center justify-center rounded-full border border-gray-300 bg-white shadow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="0.5"
-                  stroke="currentColor"
-                  className="size-1/2 text-gray-500"
-                  aria-hidden="true"
+                  <Icon className="size-5" aria-hidden="true" />
+                </div>
+                <p
+                  className={cn(
+                    'mb-1 text-3xl font-bold tracking-tight',
+                    stat.accent,
+                  )}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-                  />
-                </svg>
+                  {stat.value}
+                </p>
+                <p className="mb-2 text-sm font-semibold text-foreground">
+                  {stat.label}
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {stat.description}
+                </p>
               </div>
-              <div className="absolute inset-0 -translate-x-2 -translate-y-2 rounded-full bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900" />
-            </div>
-            <h3 className="font-headline mt-6 text-xl sm:mt-10 sm:text-2xl">
-              Increase Productivity
-            </h3>
-            <p className="mt-4 leading-relaxed">
-              Focus on content and insights, not formatting. Let AI handle the structure.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="relative left-2 mx-auto size-20 sm:size-28 lg:size-32">
-              <div className="relative z-10 flex size-full items-center justify-center rounded-full border border-gray-300 bg-white shadow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth=".5"
-                  stroke="currentColor"
-                  className="size-1/2 text-gray-500"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                  />
-                </svg>
-              </div>
-              <div className="absolute inset-0 -translate-x-2 -translate-y-2 rounded-full bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900" />
-            </div>
-            <h3 className="font-headline mt-6 text-xl sm:mt-10 sm:text-2xl">
-              Stunning Presentations
-            </h3>
-            <p className="mt-4 leading-relaxed">
-              No design experience required — SlideTube-AI makes it easy to create beautiful, professional presentations every time.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="relative left-2 mx-auto size-20 sm:size-28 lg:size-32">
-              <div className="relative z-10 flex size-full items-center justify-center rounded-full border border-gray-300 bg-white shadow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="0.5"
-                  stroke="currentColor"
-                  className="size-1/2 text-gray-500"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                  />
-                </svg>
-              </div>
-              <div className="absolute inset-0 -translate-x-2 -translate-y-2 rounded-full bg-gradient-to-br from-gray-800 via-gray-100 to-gray-900" />
-            </div>
-            <h3 className="font-headline mt-6 text-xl sm:mt-10 sm:text-2xl">
-              Perfect for Everyone
-            </h3>
-            <p className="mt-4 leading-relaxed">
-              Whether you&apos;re preparing lessons, client pitches, or marketing presentations, SlideTube-AI helps you succeed.
-            </p>
-          </div>
+            )
+          })}
         </div>
       </div>
     </section>

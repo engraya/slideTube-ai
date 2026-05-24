@@ -3,239 +3,181 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Menu, X, Zap } from 'lucide-react'
 
 import { useOnScroll } from '@/hooks'
 import { cn } from '@/lib/utils'
-
+import { buttonVariants } from '@/components/ui/button'
 import ThemeSwitch from '../theme-switch'
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Features', href: '/#features' },
+  { label: 'Pricing', href: '/#pricing' },
+]
+
 const Header = () => {
-  // State to track if the mobile menu is open
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  // Function to toggle the mobile menu
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
-
   const isScrolled = useOnScroll()
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 h-16 w-full bg-transparent',
+        'sticky top-0 z-50 h-16 w-full transition-all duration-200',
         isScrolled
-          ? 'shadow-sm backdrop-blur-[10px] duration-300 ease-in-out'
-          : '',
+          ? 'border-b border-border bg-background/80 shadow-sm backdrop-blur-xl'
+          : 'bg-transparent',
       )}
     >
-      <div className={cn('container h-full')}>
-        <div className={cn('flex h-full items-center justify-between')}>
-          {/* Logo */}
-          <Link href="/" className={cn('text-2xl font-bold')}>
-            <h1 className="bg-gradient-to-br from-gray-700 via-gray-200 to-gray-600 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent drop-shadow-sm">
-              SlideTube-AI
-            </h1>
-          </Link>
+      <div className="container mx-auto flex h-full max-w-6xl items-center justify-between px-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+            <Zap className="size-4" aria-hidden="true" />
+          </div>
+          <span className="text-base font-bold tracking-tight text-foreground">
+            SlideTube<span className="text-primary">AI</span>
+          </span>
+        </Link>
 
-          {/* Desktop Menu */}
-          <nav className="hidden justify-center md:flex md:grow" aria-label="Main navigation">
-            <ul className="flex justify-center space-x-4 hover:text-sky-300">
-              <li>
-                <Link href="/" className="font-bold hover:text-secondary">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="font-bold hover:text-secondary">
-                  About
-                </Link>
-              </li>
-              <SignedIn>
-                <li>
-                  <Link href="/dashboard" className="font-bold hover:text-secondary">
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/generate"
-                    className="font-bold hover:text-secondary"
-                  >
-                    Generate
-                  </Link>
-                </li>
-              </SignedIn>
-            </ul>
-          </nav>
-
-          {/* Hamburger menu (for mobile) */}
-          <div className="flex gap-4 space-x-3 md:hidden">
-            <button
-              id="hamburger"
-              className="focus:outline-none dark:text-slate-900"
-              onClick={toggleMenu}
-              aria-controls="mobile-menu"
-              aria-expanded={isMenuOpen}
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              <svg
-                className="size-5 text-slate-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="mr-4 flex">
-            <ThemeSwitch />
-          </div>
+              {link.label}
+            </Link>
+          ))}
+          <SignedIn>
+            <Link
+              href="/dashboard"
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/generate"
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Generate
+            </Link>
+          </SignedIn>
+        </nav>
 
-          {/* Right section: Buttons (for desktop) */}
-          <div className="hidden items-center space-x-4 lg:flex">
-            <SignedOut>
-              <button className="group relative inline-flex items-center justify-start overflow-hidden rounded bg-gradient-to-r from-green-400 to-blue-500 py-2 pl-4 pr-12 font-semibold text-white transition-all duration-150 ease-in-out hover:pl-10 hover:pr-6">
-                <span className="absolute bottom-0 left-0 h-1 w-full bg-indigo-600 transition-all duration-150 ease-in-out group-hover:h-full" />
-                <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                  <svg
-                    className="size-5 text-green-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </span>
-                <span className="absolute left-0 -translate-x-12 pl-2.5 duration-200 ease-out group-hover:translate-x-0">
-                  <svg
-                    className="size-5 text-green-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </span>
-                <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">
-                  <SignInButton />
-                </span>
+        {/* Desktop Right Section */}
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeSwitch />
+          <SignedOut>
+            <SignInButton>
+              <button
+                className={cn(
+                  buttonVariants({ variant: 'ghost' }),
+                  'text-sm font-medium',
+                )}
+              >
+                Sign in
               </button>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
+            </SignInButton>
+            <Link
+              href="/sign-up"
+              className={cn(
+                buttonVariants(),
+                'h-9 px-4 text-sm',
+              )}
+            >
+              Get started free
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <Link
+              href="/generate"
+              className={cn(buttonVariants(), 'h-9 px-4 text-sm')}
+            >
+              <Zap className="mr-1.5 size-3.5" aria-hidden="true" />
+              New presentation
+            </Link>
+            <UserButton />
+          </SignedIn>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <>
-            <nav
-              id="mobile-menu"
-              className="absolute left-0 top-16 w-full bg-slate-600 text-white hover:text-sky-300 md:hidden"
-              aria-label="Mobile navigation"
-            >
-              <ul className="flex cursor-pointer flex-col items-center space-y-4 border-b p-4">
-                <li>
-                  <Link
-                    href="/"
-                    className="cursor-pointer font-bold hover:text-sky-300"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/about"
-                    className="cursor-pointer font-bold hover:text-sky-300"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    About
-                  </Link>
-                </li>
-                <SignedIn>
-                  <li>
-                    <Link
-                      href="/dashboard"
-                      className="cursor-pointer font-bold hover:text-sky-300"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/generate"
-                      className="cursor-pointer font-bold hover:text-sky-300"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Generate
-                    </Link>
-                  </li>
-                </SignedIn>
-              </ul>
-              <SignedOut>
-                <button className="group relative mx-auto inline-flex items-center justify-center overflow-hidden rounded bg-gradient-to-r from-green-400 to-blue-500 py-2 pl-4 pr-12 font-semibold text-white transition-all duration-150 ease-in-out hover:pl-10 hover:pr-6">
-                  <span className="absolute bottom-0 left-0 h-1 w-full bg-indigo-600 transition-all duration-150 ease-in-out group-hover:h-full" />
-                  <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                    <svg
-                      className="size-5 text-green-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </span>
-                  <span className="absolute left-0 -translate-x-12 pl-2.5 duration-200 ease-out group-hover:translate-x-0">
-                    <svg
-                      className="size-5 text-green-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </span>
-                  <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white"></span>
-                </button>
-                <SignInButton />
-              </SignedOut>
-            </nav>
-          </>
-        )}
+        {/* Mobile Controls */}
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeSwitch />
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <button
+            className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-controls="mobile-menu"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isMenuOpen ? (
+              <X className="size-5" aria-hidden="true" />
+            ) : (
+              <Menu className="size-5" aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <nav
+          id="mobile-menu"
+          className="border-t border-border bg-background/95 backdrop-blur-xl md:hidden"
+          aria-label="Mobile navigation"
+        >
+          <div className="container flex flex-col gap-1 px-4 py-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <SignedIn>
+              <Link
+                href="/dashboard"
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/generate"
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Generate
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+                <SignInButton>
+                  <button className={cn(buttonVariants({ variant: 'outline' }), 'w-full justify-center text-sm')}>
+                    Sign in
+                  </button>
+                </SignInButton>
+                <Link
+                  href="/sign-up"
+                  className={cn(buttonVariants(), 'w-full justify-center text-sm')}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Get started free
+                </Link>
+              </div>
+            </SignedOut>
+          </div>
+        </nav>
+      )}
     </header>
   )
 }
